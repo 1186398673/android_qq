@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 选中状态 -->
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- 圆形背景 -->
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="#2196F3"/> <!-- 选中时的蓝色 -->
+                    <size android:width="18dp" android:height="18dp"/>
+                    <stroke android:width="2dp" android:color="#FFFFFF"/> <!-- 边框 -->
+                </shape>
+            </item>
+            <!-- 勾号 -->
+            <item>
+                <vector
+                    android:width="18dp"
+                    android:height="18dp"
+                    android:viewportWidth="18"
+                    android:viewportHeight="18">
+                    <path
+                        android:fillColor="#FFFFFF"
+                        android:pathData="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41,-1.41L9,16.17z"/>
+                </vector>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- 未选中状态 -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#B0BEC5"/> <!-- 未选中时的灰色 -->
+            <size android:width="18dp" android:height="18dp"/>
+            <stroke android:width="2dp" android:color="#FFFFFF"/> <!-- 边框 -->
+        </shape>
+    </item>
+</selector>

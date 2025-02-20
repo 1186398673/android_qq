@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 消息 -->
+    <item
+        android:id="@+id/nav_message"
+        android:icon="@mipmap/phone"
+        android:title="消息" />
+
+    <!-- 频道 -->
+    <item
+        android:id="@+id/nav_channel"
+        android:icon="@mipmap/register"
+        android:title="频道" />
+
+    <!-- 短视频 -->
+    <item
+        android:id="@+id/nav_video"
+        android:icon="@mipmap/more"
+        android:title="短视频" />
+
+    <!-- 联系人 -->
+    <item
+        android:id="@+id/nav_contacts"
+        android:icon="@mipmap/user"
+        android:title="联系人" />
+
+    <!-- 动态 -->
+    <item
+        android:id="@+id/nav_dynamic"
+        android:icon="@mipmap/user"
+        android:title="动态" />
+</menu>

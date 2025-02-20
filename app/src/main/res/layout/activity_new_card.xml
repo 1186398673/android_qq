@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:id="@+id/new_card"
+    >
+
+    <!-- 卡片标题输入框 -->
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入标题"
+        android:inputType="text"
+        android:padding="16dp"
+        />
+
+    <!-- 卡片内容输入框 -->
+    <EditText
+        android:id="@+id/editTextContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入内容"
+        android:inputType="textMultiLine"
+        android:minLines="3" />
+
+    <!-- 图标选择 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择图标"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioIcon1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+
+        <RadioButton
+            android:id="@+id/radioIcon2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+
+        <RadioButton
+            android:id="@+id/radioIcon3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+    </RadioGroup>
+
+    <!-- 保存按钮 -->
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

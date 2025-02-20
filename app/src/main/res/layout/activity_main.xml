@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        >
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+
+            <EditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:padding="16dp"
+                android:gravity="center"
+                android:background="@drawable/edict_text_bg"
+                android:hint="输入QQ账号"
+                >
+
+            </EditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:padding="16dp"
+                android:gravity="center"
+                android:background="@drawable/edict_text_bg"
+                android:hint="输入QQ密码"
+                >
+
+            </EditText>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="登录"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            >
+        </Button>
+
+        <LinearLayout
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:orientation="horizontal"
+            >
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_circle"
+                >
+
+            </CheckBox>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:text="已阅读并同意"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="服务协议"
+                android:textSize="10sp"
+                android:textColor="@color/purple_700"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:text="和"
+                >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:text="QQ隐私保护指引"
+                android:textColor="@color/purple_700"
+                >
+            </TextView>
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_above="@+id/input"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:id="@+id/qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/qq"
+            android:layout_marginTop="40dp"
+            >
+
+        </ImageView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageButton
+                android:id="@+id/btn_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/phone"
+                android:contentDescription="手机号登录按钮"
+                >
+
+            </ImageButton>
+
+
+            <ImageButton
+                android:id="@+id/btn_other"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/user"
+                android:contentDescription="其它登录方式按钮"
+                >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/btn_register"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/register"
+                android:contentDescription="注册按钮"
+                >
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/btn_more"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/more"
+                android:contentDescription="更多按钮"
+                >
+            </ImageButton>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="手机号登录"
+                >
+
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="其它方式登录"
+                >
+
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="注册"
+                >
+
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="更多"
+                >
+
+            </TextView>
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</RelativeLayout>

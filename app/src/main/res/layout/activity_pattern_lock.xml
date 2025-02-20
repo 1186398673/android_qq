@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/PatternLock"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".PatternLockActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.example.myapplication.PatternLockView
+            android:id="@+id/patternView"
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
+
+        <TextView
+            android:id="@+id/tvHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_new"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:text="设置新图案密码"
+            >
+
+        </Button>
+
+    </LinearLayout>
+</RelativeLayout>

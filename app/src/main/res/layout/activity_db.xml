@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/db"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DbActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="添加数据"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            >
+        </Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="删除数据"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            >
+        </Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="修改数据"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            >
+        </Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="查询数据"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            >
+        </Button>
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>
