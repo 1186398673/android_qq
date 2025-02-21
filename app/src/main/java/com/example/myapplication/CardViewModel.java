@@ -38,4 +38,15 @@ public class CardViewModel extends ViewModel {
         updatedList.add(card);
         cards.setValue(updatedList);
     }
+    public void deleteCard(int id) {
+                List<CardItem> updatedList = new ArrayList<>();
+                if (cards.getValue() != null) {
+                    updatedList.addAll(cards.getValue());
+                }
+                // 从列表中移除被删除的卡片
+                updatedList.removeIf(card -> card.getId() == id);
+        cards.setValue(updatedList);
+
+
+    }
 }

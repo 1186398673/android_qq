@@ -53,9 +53,6 @@ public class CardItem implements Serializable{
         return iconResId;
     }
 
-    public void setIconResId(int iconResId) {
-        this.iconResId = iconResId;
-    }
 
 
 }

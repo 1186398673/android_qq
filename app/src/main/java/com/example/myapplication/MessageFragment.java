@@ -38,7 +38,7 @@ public class MessageFragment extends Fragment {
         // 初始化 RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CardAdapter(new ArrayList<>());
+        adapter = new CardAdapter(getContext(),new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
         // 将 ViewModel 的作用域设置为 Activity，这样在同一个 Activity 内的所有 Fragment 都可以共享同一个 ViewModel，从而保持数据的持久性。

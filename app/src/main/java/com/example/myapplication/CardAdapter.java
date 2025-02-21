@@ -24,19 +24,7 @@ import java.util.List;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
     private List<CardItem> cardList;
-    private List<CardItem> cards;
-    private OnDeleteClickListener deleteClickListener;
-
-
-    // 定义接口
-    public interface OnDeleteClickListener {
-        void onDeleteClick(int id);
-    }
-
-    // 设置监听器的方法
-    public void setOnDeleteClickListener(OnDeleteClickListener listener) {
-        this.deleteClickListener = listener;
-    }
+    private Context context;
 
 
 
@@ -48,6 +36,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     // 另一种构造函数（如果需要）
     public CardAdapter(Context context, List<CardItem> cardList) {
         this.cardList = cardList;
+        this.context=context;
+
+
     }
 
     // 创建 ViewHolder
@@ -56,6 +47,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_card, parent, false);
+
         return new CardViewHolder(view);
     }
 
@@ -67,9 +59,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.title.setText(card.getTitle());
         holder.content.setText(card.getContent());
        holder.deleteButton.setOnClickListener(v -> {
-           if (deleteClickListener != null) {
-                deleteClickListener.onDeleteClick(card.getId());
-            }
+
+
+           CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+           dbHelper.deleteCardById(card.getId());
+
+
+
+           removeCard(position);
+
+
+
         });
     }
 

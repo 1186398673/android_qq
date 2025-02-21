@@ -36,7 +36,7 @@ public class NewCardActivity extends AppCompatActivity {
             // 获取用户输入
             String title = editTextTitle.getText().toString();
             String content = editTextContent.getText().toString();
-            int id = 2;
+            int id = 0;
 
             // 获取选中的图标
             int selectedIconId = R.mipmap.user; // 默认图标
