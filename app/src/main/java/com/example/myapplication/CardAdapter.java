@@ -4,16 +4,23 @@ package com.example.myapplication;
 
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.CardItem;
@@ -28,6 +35,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
 
 
+
+
+
     // 构造函数
     public CardAdapter(List<CardItem> cardList) {
         this.cardList = cardList;
@@ -37,6 +47,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public CardAdapter(Context context, List<CardItem> cardList) {
         this.cardList = cardList;
         this.context=context;
+
 
 
     }
@@ -62,14 +73,26 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
 
            CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
-           dbHelper.deleteCardById(card.getId());
+           //dbHelper.deleteCardById(card.getId());
+           showRenameDialog(v.getContext(), card.getId(), dbHelper);
 
 
 
-           removeCard(position);
+           //removeCard(position);
 
 
 
+        });
+
+        holder.title.setOnClickListener(v -> {
+            //CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+            //showEditContentDialog(context, card.getId(), card.getContent(), dbHelper, position);
+            Intent intent = new Intent(context, Cards_Activity.class);
+            intent.putExtra("parentTitle", card.getTitle());
+            //Log.i("parentTitle",card.getTitle());
+            context.startActivity(intent);
+            
+            
         });
     }
 
@@ -114,5 +137,92 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             this.cardList.remove(position);
             notifyItemRemoved(position);
         }
+    }
+
+
+
+    // 方法用于显示重命名对话框
+    public void showRenameDialog(final Context context, final int cardId, final CardDatabaseHelper dbHelper) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("重命名卡片");
+
+        // 设置输入框
+        final EditText input = new EditText(context);
+        input.setHint("请输入新的卡片名称");
+        builder.setView(input);
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newTitle = input.getText().toString().trim();
+                if (!newTitle.isEmpty()) {
+                    boolean isRenamed = dbHelper.renameCard(cardId, newTitle);
+                    if (isRenamed) {
+                        CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+                        List<CardItem> cardList = dbHelper.getCardList();
+                        setCards(cardList);
+                    } else {
+                        // 处理重命名失败的情况
+                    }
+                } else {
+                    // 处理输入为空的情况
+                }
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
+    // 方法用于显示编辑内容的对话框
+    public void showEditContentDialog(final Context context, final int cardId, String currentContent, final CardDatabaseHelper dbHelper, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("编辑内容");
+
+        // 设置输入框
+        final EditText input = new EditText(context);
+        input.setText(currentContent);
+        input.setSelection(currentContent.length()); // 将光标移动到文本末尾
+        builder.setView(input);
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newContent = input.getText().toString().trim();
+                if (!newContent.isEmpty()) {
+                    boolean isUpdated = dbHelper.updateCardContent(cardId, newContent);
+                    if (isUpdated) {
+                        // 更新数据源
+                        cardList.get(position).setContent(newContent);
+                        // 通知适配器数据已更改
+                        notifyItemChanged(position);
+                    } else {
+                        // 处理更新失败的情况
+                    }
+                } else {
+                    // 处理输入为空的情况
+                }
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }

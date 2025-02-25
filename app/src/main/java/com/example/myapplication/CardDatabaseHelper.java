@@ -97,4 +97,24 @@ public class CardDatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return rowsDeleted;
     }
+
+    // 在 CardDatabaseHelper 类中添加
+    public boolean renameCard(int id, String newTitle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TITLE, newTitle);
+        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    // 在 CardDatabaseHelper 类中添加
+    public boolean updateCardContent(int id, String newContent) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CONTENT, newContent);
+        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0;
+    }
 }
