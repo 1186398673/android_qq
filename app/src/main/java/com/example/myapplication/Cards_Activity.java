@@ -31,7 +31,7 @@ public class Cards_Activity extends AppCompatActivity {
     private List<CardItem2> cardList;
 
 
-    private String parentTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +93,13 @@ public class Cards_Activity extends AppCompatActivity {
 
                 if (!newContent.isEmpty()) {
 
+
+                    String parentTitle = getIntent().getStringExtra("parentTitle");
                     CardItem2 newCard = new CardItem2(newContent,parentTitle);
-                    adapter.addCard(newCard);
                     dbHelper = new CardDatabaseHelper2(context);
                     dbHelper.insertCard(newCard);
+                    adapter.addCard(newCard);
+
 
                 }
             }
