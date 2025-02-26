@@ -36,6 +36,8 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
 
 
 
+
+
     // 另一种构造函数（如果需要）
     public CardAdapter2(Context context, List<CardItem2> cardList) {
         this.cardList = cardList;
@@ -60,6 +62,19 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
     public void onBindViewHolder(@NonNull CardViewHolder2 holder, int position) {
         CardItem2 card = cardList.get(position);
         holder.content.setText(card.getContent());
+
+        holder.content.setOnClickListener(v->{
+            CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
+            showEditContentDialog(context,card.getid(),card.getContent(),dbHelper,position);
+        });
+        holder.content.setOnLongClickListener(v->{
+
+            removeCard(position);
+            CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
+            dbHelper.deleteCardById(card.getid());
+
+            return  true;
+        });
 
 
 
@@ -95,18 +110,67 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         notifyItemInserted(cardList.size() - 1);
     }
 
+    public void removeCard(int position) {
+        if (position >= 0 && position < cardList.size()) {
+            this.cardList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     // 返回当前的卡片列表
     public List<CardItem2> getCards() {
         return this.cardList;
     }
 
+    public void showEditContentDialog(final Context context, final int cardId, String currentContent, final CardDatabaseHelper2 dbHelper, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("编辑内容");
 
+        // 设置输入框
+        final EditText input = new EditText(context);
+        input.setText(currentContent);
+        input.setSelection(currentContent.length()); // 将光标移动到文本末尾
+        builder.setView(input);
 
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newContent = input.getText().toString().trim();
+                if (!newContent.isEmpty()) {
+                    boolean isUpdated = dbHelper.updateCardContent(cardId, newContent);
+                    if (isUpdated) {
+                        // 更新数据源
+                        cardList.get(position).setContent(newContent);
+                        // 通知适配器数据已更改
+                        notifyItemChanged(position);
+                    } else {
+                        // 处理更新失败的情况
+                    }
+                } else {
+                    // 处理输入为空的情况
+                }
+            }
+        });
 
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
-
-
-
+        builder.show();
     }
+
+
+
+
+
+
+
+
+}
 
 

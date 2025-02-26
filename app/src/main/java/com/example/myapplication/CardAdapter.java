@@ -69,30 +69,38 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.icon.setImageResource(card.getIconResId());
         holder.title.setText(card.getTitle());
         holder.content.setText(card.getContent());
-       holder.deleteButton.setOnClickListener(v -> {
 
-
-           CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
-           //dbHelper.deleteCardById(card.getId());
-           showRenameDialog(v.getContext(), card.getId(), dbHelper);
-
-
-
-           //removeCard(position);
-
-
-
-        });
 
         holder.title.setOnClickListener(v -> {
-            //CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
-            //showEditContentDialog(context, card.getId(), card.getContent(), dbHelper, position);
+
+            CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(context);
+            String parentTitle= card.getTitle();
+            List<CardItem2> cardList2 = dbHelper2.getCardsByParentTitle(parentTitle);
+            CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+            dbHelper.updateCardContent(card.getId(), "卡片数"+cardList2.size());
+            notifyDataSetChanged();
             Intent intent = new Intent(context, Cards_Activity.class);
             intent.putExtra("parentTitle", card.getTitle());
             //Log.i("parentTitle",card.getTitle());
             context.startActivity(intent);
+
             
-            
+
+        });
+
+        holder.title.setOnLongClickListener(v->{
+            CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+            showRenameDialog(v.getContext(), card.getId(), dbHelper,card.getTitle());
+            //CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+            //showEditContentDialog(context, card.getId(), card.getContent(), dbHelper, position);
+            return true;
+        });
+
+        holder.icon.setOnLongClickListener(v->{
+            CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+            dbHelper.deleteCardById(card.getId());
+            removeCard(position);
+            return true;
         });
     }
 
@@ -114,7 +122,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             icon = itemView.findViewById(R.id.icon);
             title = itemView.findViewById(R.id.title);
             content = itemView.findViewById(R.id.content);
-            deleteButton=itemView.findViewById(R.id.delectbtn);
+
 
         }
     }
@@ -142,7 +150,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
 
     // 方法用于显示重命名对话框
-    public void showRenameDialog(final Context context, final int cardId, final CardDatabaseHelper dbHelper) {
+    public void showRenameDialog(final Context context, final int cardId, final CardDatabaseHelper dbHelper,final String oldtitle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("重命名卡片");
 
@@ -158,6 +166,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 String newTitle = input.getText().toString().trim();
                 if (!newTitle.isEmpty()) {
                     boolean isRenamed = dbHelper.renameCard(cardId, newTitle);
+                    CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(context);
+                    dbHelper2.updateParentTitle(oldtitle,newTitle);
                     if (isRenamed) {
                         CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
                         List<CardItem> cardList = dbHelper.getCardList();

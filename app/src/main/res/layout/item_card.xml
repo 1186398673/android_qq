@@ -24,37 +24,21 @@
         android:orientation="vertical"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            >
+
             <!-- 卡片标题 -->
             <TextView
                 android:id="@+id/title"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginEnd="20dp"
                 android:text="卡片标题"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginStart="20dp"
                 android:clickable="true"
                 />
 
-                <ImageButton
-                    android:id="@+id/delectbtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:src="@mipmap/mm"
-                    android:contentDescription="1"
-                    >
 
-                </ImageButton>
-
-
-        </LinearLayout>
 
 
         <!-- 卡片内容 -->
@@ -62,6 +46,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:gravity="center"
             android:text="卡片内容"
             android:textSize="14sp" />

@@ -86,11 +86,11 @@ public class LoginSuccessActivity extends AppCompatActivity {
 
         // 接收传递的数据
         String username = getIntent().getStringExtra("USERNAME");
-        TextView tvWelcome = findViewById(R.id.tv_welcome);
+
 
 
         // 显示欢迎信息
-        tvWelcome.setText(username + "，登录成功！");
+        //tvWelcome.setText(username + "，登录成功！");
 
 
 

@@ -60,7 +60,7 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                CardItem2 card = new CardItem2(cursor.getString(1), cursor.getString(2));
+                CardItem2 card = new CardItem2(cursor.getString(1), cursor.getString(2),cursor.getInt(0));
                 cardList.add(card);
             } while (cursor.moveToNext());
         }
@@ -68,5 +68,34 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return cardList;
+    }
+
+
+    // 批量更新 parentTitle
+    public int updateParentTitle(String oldParentTitle, String newParentTitle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PARENT_TITLE, newParentTitle);
+
+        // 更新所有 parentTitle 匹配的卡片
+        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_PARENT_TITLE + "=?", new String[]{oldParentTitle});
+        db.close();
+        return rowsAffected;
+    }
+
+    public boolean updateCardContent(int id, String newContent) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CONTENT, newContent);
+        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public boolean deleteCardById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE_CARDS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0;
     }
 }

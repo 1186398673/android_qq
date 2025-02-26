@@ -1,12 +1,16 @@
 package com.example.myapplication;
 
 // MessageFragment.java
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,6 +81,44 @@ public class MessageFragment extends Fragment {
 
             }
         }
+    }
+
+    public void showEditContentDialog(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("编辑内容");
+
+        // 设置输入框
+        final EditText input = new EditText(context);
+        input.setText("");
+        builder.setView(input);
+
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newContent = input.getText().toString().trim();
+
+
+                if (!newContent.isEmpty()) {
+
+
+
+
+
+                }
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 

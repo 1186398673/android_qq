@@ -30,6 +30,8 @@ public class Cards_Activity extends AppCompatActivity {
 
     private List<CardItem2> cardList;
 
+    private  int id=1;
+
 
 
 
@@ -56,7 +58,6 @@ public class Cards_Activity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         cardList = dbHelper.getCardsByParentTitle(parentTitle);
         adapter.setCards(cardList);
-
         button.setOnClickListener(v->{
             showEditContentDialog(this);
 
@@ -95,7 +96,8 @@ public class Cards_Activity extends AppCompatActivity {
 
 
                     String parentTitle = getIntent().getStringExtra("parentTitle");
-                    CardItem2 newCard = new CardItem2(newContent,parentTitle);
+                    id=id+1;
+                    CardItem2 newCard = new CardItem2(newContent,parentTitle,id);
                     dbHelper = new CardDatabaseHelper2(context);
                     dbHelper.insertCard(newCard);
                     adapter.addCard(newCard);

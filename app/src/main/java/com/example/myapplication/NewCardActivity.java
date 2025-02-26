@@ -28,14 +28,13 @@ public class NewCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_card);
         // 初始化视图
         editTextTitle = findViewById(R.id.editTextTitle);
-        editTextContent = findViewById(R.id.editTextContent);
         radioGroupIcons = findViewById(R.id.radioGroupIcons);
         buttonSave = findViewById(R.id.buttonSave);
 
         buttonSave.setOnClickListener(v->{
             // 获取用户输入
             String title = editTextTitle.getText().toString();
-            String content = editTextContent.getText().toString();
+            String content = "卡片数";
             int id = 0;
 
             // 获取选中的图标
