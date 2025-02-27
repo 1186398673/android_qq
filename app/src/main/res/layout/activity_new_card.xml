@@ -41,8 +41,8 @@
 
         <RadioButton
             android:id="@+id/radioIcon2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:button="@mipmap/user" />
 
         <RadioButton
@@ -50,7 +50,87 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@mipmap/user" />
+
+            <RadioButton
+                android:id="@+id/radioIcon4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@mipmap/user" />
+            <RadioButton
+                android:id="@+id/radioIcon5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@mipmap/user" />
+
+
+
     </RadioGroup>
+    <RadioGroup
+        android:id="@+id/radioGroupIcons2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <RadioButton
+            android:id="@+id/radioIcon6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioGroupIcons3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <RadioButton
+            android:id="@+id/radioIcon11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+        <RadioButton
+            android:id="@+id/radioIcon15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@mipmap/user" />
+    </RadioGroup>
+
 
     <!-- 保存按钮 -->
     <Button
