@@ -48,7 +48,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         Book currentBook = books.get(position);
-        holder.coverImageView.setImageResource(currentBook.getCoverResId());
+
+        holder.coverImageView.setImageBitmap(currentBook.getCoverResId());
         holder.titleTextView.setText(currentBook.getTitle());
         holder.itemView.setOnClickListener(v -> listener.onItemClick(currentBook));
     }

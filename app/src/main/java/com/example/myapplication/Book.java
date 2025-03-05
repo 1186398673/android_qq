@@ -1,11 +1,13 @@
 package com.example.myapplication;
 
+import android.graphics.Bitmap;
+
 public class Book {
     private int id;
     private String title;
-    private int coverResId;
+    private Bitmap coverResId;
 
-    public Book(int id, String title, int coverResId) {
+    public Book(int id, String title, Bitmap coverResId) {
         this.id = id;
         this.title = title;
         this.coverResId = coverResId;
@@ -19,7 +21,7 @@ public class Book {
         return title;
     }
 
-    public int getCoverResId() {
+    public Bitmap getCoverResId() {
         return coverResId;
     }
 }

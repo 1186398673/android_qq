@@ -98,4 +98,13 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
         db.close();
         return rowsAffected > 0;
     }
+
+    // 根据 parentTitle 删除所有匹配的卡片
+    public int deleteCardsByParentTitle(String parentTitle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // 删除所有 parentTitle 匹配的卡片
+        int rowsDeleted = db.delete(TABLE_CARDS, COLUMN_PARENT_TITLE + "=?", new String[]{parentTitle});
+        db.close();
+        return rowsDeleted;
+    }
 }

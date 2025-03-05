@@ -10,8 +10,8 @@
         android:id="@+id/bookCoverImageView"
         android:layout_width="60dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_launcher_background"
-        android:scaleType="centerCrop"/>
+        android:background="@android:color/transparent"
+        />
 
     <TextView
         android:id="@+id/bookTitleTextView"

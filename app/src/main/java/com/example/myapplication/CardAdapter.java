@@ -99,6 +99,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.icon.setOnLongClickListener(v->{
             CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
             dbHelper.deleteCardById(card.getId());
+            CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(context);
+            dbHelper2.deleteCardsByParentTitle(card.getTitle());
             removeCard(position);
             return true;
         });
