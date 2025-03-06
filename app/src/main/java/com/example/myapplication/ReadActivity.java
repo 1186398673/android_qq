@@ -15,6 +15,8 @@ import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.github.barteksc.pdfviewer.util.FitPolicy;
 
+import java.io.File;
+
 public class ReadActivity extends AppCompatActivity implements OnPageChangeListener {
 
     private TextView pageNumberTextView;
@@ -27,10 +29,9 @@ public class ReadActivity extends AppCompatActivity implements OnPageChangeListe
         PDFView pdfView = findViewById(R.id.pdfView);
          pageNumberTextView = findViewById(R.id.pageNumberTextView);
 
-         String booktitle=getIntent().getStringExtra("booktitle");
 
-        // 从 assets 文件夹加载 PDF 文件
-        pdfView.fromAsset(booktitle)
+         String filePath=getIntent().getStringExtra("filePath");
+        pdfView.fromFile(new File(filePath)) // 从文件路径加载
                 .enableSwipe(true) // 启用滑动
                 .swipeHorizontal(false) // 垂直滑动
                 .enableDoubletap(true) // 启用双击缩放
