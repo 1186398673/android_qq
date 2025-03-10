@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ttiActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/online_llm_tti_Notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请在文本框中输入文本获取图片。" />
+        <ImageView
+            android:id="@+id/online_llm_tti_output_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/online_llm_tti_input_text"
+            android:layout_width="match_parent"
+            android:text="日照金山"
+            android:layout_height="wrap_content"
+            android:hint="用户输入"/>
+        <Button
+            android:id="@+id/online_llm_tti_arun_start_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:text="异步生成图片"/>
+        <Button
+            android:id="@+id/online_llm_tti_run_start_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:text="同步生成图片"/>
+        <Button
+            android:id="@+id/online_llm_tti_stop_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:text="停止生成图片"/>
+    </LinearLayout>
+
+</RelativeLayout>

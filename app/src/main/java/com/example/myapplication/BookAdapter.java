@@ -52,10 +52,23 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.coverImageView.setImageBitmap(currentBook.getCoverResId());
         holder.titleTextView.setText(currentBook.getTitle());
         holder.itemView.setOnClickListener(v -> listener.onItemClick(currentBook));
+        holder.coverImageView.setOnLongClickListener(v->{
+            BookDatabaseHelper dbHelper = new BookDatabaseHelper(context);
+            dbHelper.deleteBook(currentBook.getId());
+            removebook(position);
+            return true;
+        });
     }
 
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public void removebook(int position) {
+        if (position >= 0 && position < books.size()) {
+            this.books.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 }

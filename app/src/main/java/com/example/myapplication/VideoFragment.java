@@ -68,12 +68,12 @@ public class VideoFragment extends Fragment implements BookAdapter.OnItemClickLi
             openFilePicker();
         });
         // 获取 assets 文件夹中的 PDF 文件名称
-        String[] pdfFiles = PDFUtils.getPDFFileNames(getContext());
-        j=pdfFiles.length;
+
         int i;
         bookList = new ArrayList<>();
         BookDatabaseHelper dbHelper = new BookDatabaseHelper(getContext());
         bookList=dbHelper.getAllBooks();
+        j=bookList.size();
         // 获取 RecyclerView 并设置布局管理器
         recyclerView = view.findViewById(R.id.bookRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -13,16 +13,104 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         >
 
         <TextView
             android:id="@+id/cardContent"
             android:layout_width="match_parent"
-            android:layout_height="77dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
+            android:text="标题"
+            android:textColor="@android:color/holo_red_dark"
             android:clickable="true"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+               android:src="@mipmap/define"
+                >
+
+            </ImageView>
+        <TextView
+            android:id="@+id/cardContent_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="定义"
+            android:clickable="true"
+            />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/meanning"
+                >
+
+            </ImageView>
+        <TextView
+            android:id="@+id/cardContent_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="意义"
+            android:clickable="true"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/range"
+                >
+
+            </ImageView>
+        <TextView
+            android:id="@+id/cardContent_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="适用范围"
+            android:clickable="true"
+            />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/example"
+                >
+
+            </ImageView>
+        <TextView
+            android:id="@+id/cardContent_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="例子"
+            android:clickable="true"
+            />
+        </LinearLayout>
 
 
     </LinearLayout>

@@ -4,16 +4,21 @@ plugins {
 
 android {
     namespace 'com.example.myapplication'
-    compileSdk 34
+    compileSdk 34//34
 
     defaultConfig {
         applicationId "com.example.myapplication"
-        minSdk 24
-        targetSdk 34
+        minSdk 24//24
+        targetSdk 34//34
         versionCode 1
         versionName "1.0"
+//        ndk {
+//            abiFilters 'armeabi-v7a', 'arm64-v8a'
+//        }
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -49,6 +54,8 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     annotationProcessor libs.room.compiler
+    implementation files('libs/SparkChain.aar')
+
 
 
 
