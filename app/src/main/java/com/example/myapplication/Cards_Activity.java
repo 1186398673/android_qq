@@ -93,13 +93,14 @@ public class Cards_Activity extends AppCompatActivity {
         final TextInputEditText editTextMeaning = view.findViewById(R.id.editTextMeaning);
         final TextInputEditText editTextRange = view.findViewById(R.id.editTextRange);
         final TextInputEditText editTextExample = view.findViewById(R.id.editTextExample);
-
+        final TextInputEditText editTextLevel = view.findViewById(R.id.editTextLevel);
         // 设置输入框的提示文本（可选）
         editTextContent.setHint("请输入标题");
         editTextDefine.setHint("请输入定义");
         editTextMeaning.setHint("请输入意义");
         editTextRange.setHint("请输入适用范围");
         editTextExample.setHint("请输入例子");
+        editTextLevel.setHint("请输入等级");
 
         builder.setView(view);
 
@@ -112,11 +113,13 @@ public class Cards_Activity extends AppCompatActivity {
                 String newMeaning = editTextMeaning.getText().toString().trim();
                 String newRange = editTextRange.getText().toString().trim();
                 String newExample = editTextExample.getText().toString().trim();
+                String newLevel = editTextLevel.getText().toString().trim();
+                int level = Integer.parseInt(newLevel);
 
                 if (!newContent.isEmpty()) {
                     String parentTitle = getIntent().getStringExtra("parentTitle");
                     id = cardList.size() + 1;
-                    CardItem2 newCard = new CardItem2(newContent, newDefine, newMeaning, newRange, newExample, parentTitle, id);
+                    CardItem2 newCard = new CardItem2(newContent, newDefine, newMeaning, newRange, newExample, parentTitle, id,level);
                     dbHelper.insertCard(newCard);
                     adapter.addCard(newCard);
                 } else {

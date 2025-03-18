@@ -11,17 +11,18 @@ import java.io.Serializable;
 
 public class CardItem implements Serializable{
 
-    private int id;
+    private int id,level;
 
     private String title;
     private String content;
     private int iconResId;
 
-    public CardItem( int id,String title, String content, int iconResId) {
+    public CardItem( int id,String title, String content, int iconResId,int level) {
         this.id=id;
         this.title = title;
         this.content = content;
         this.iconResId = iconResId;
+        this.level=level;
     }
 
     // Getter 和 Setter 方法
@@ -31,6 +32,14 @@ public class CardItem implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public String getTitle() {
@@ -51,6 +60,10 @@ public class CardItem implements Serializable{
 
     public int getIconResId() {
         return iconResId;
+    }
+
+    public void setIconResId(int iconResId) {
+        this.iconResId = iconResId;
     }
 
 

@@ -69,6 +69,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.icon.setImageResource(card.getIconResId());
         holder.title.setText(card.getTitle());
         holder.content.setText(card.getContent());
+        holder.level.setText("等级"+String.valueOf(card.getLevel())); // 绑定等级
 
 
         holder.title.setOnClickListener(v -> {
@@ -91,8 +92,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.title.setOnLongClickListener(v->{
             CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
             showRenameDialog(v.getContext(), card.getId(), dbHelper,card.getTitle());
-            //CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
-            //showEditContentDialog(context, card.getId(), card.getContent(), dbHelper, position);
+
             return true;
         });
 
@@ -102,7 +102,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(context);
             dbHelper2.deleteCardsByParentTitle(card.getTitle());
             removeCard(position);
+            CardDatabaseHelper3 dbHelper3 = new CardDatabaseHelper3(context);
+            dbHelper3.deleteCardsByParentTile(card.getTitle());
             return true;
+        });
+
+        holder.level.setOnClickListener(v->{
+            CardDatabaseHelper dbHelper = new CardDatabaseHelper(context);
+            showEditLevelDialog(context, card.getId(),String.valueOf(card.getLevel()), dbHelper, position);
         });
     }
 
@@ -116,7 +123,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     static class CardViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title;
-        TextView content;
+        TextView content,level;
         ImageButton deleteButton;
 
         public CardViewHolder(@NonNull View itemView) {
@@ -124,6 +131,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             icon = itemView.findViewById(R.id.icon);
             title = itemView.findViewById(R.id.title);
             content = itemView.findViewById(R.id.content);
+            level = itemView.findViewById(R.id.level);
 
 
         }
@@ -196,14 +204,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
 
     // 方法用于显示编辑内容的对话框
-    public void showEditContentDialog(final Context context, final int cardId, String currentContent, final CardDatabaseHelper dbHelper, final int position) {
+    public void showEditLevelDialog(final Context context, final int cardId, String currentLevel, final CardDatabaseHelper dbHelper, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("编辑内容");
 
         // 设置输入框
         final EditText input = new EditText(context);
-        input.setText(currentContent);
-        input.setSelection(currentContent.length()); // 将光标移动到文本末尾
+        input.setText(currentLevel);
+        input.setSelection(currentLevel.length()); // 将光标移动到文本末尾
         builder.setView(input);
 
         // 设置确定按钮
@@ -211,11 +219,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newContent = input.getText().toString().trim();
+                int level=Integer.parseInt(newContent);
                 if (!newContent.isEmpty()) {
-                    boolean isUpdated = dbHelper.updateCardContent(cardId, newContent);
+                    boolean isUpdated = dbHelper.updateCardLevel(cardId, level);
                     if (isUpdated) {
                         // 更新数据源
-                        cardList.get(position).setContent(newContent);
+                        cardList.get(position).setLevel(level);
                         // 通知适配器数据已更改
                         notifyItemChanged(position);
                     } else {

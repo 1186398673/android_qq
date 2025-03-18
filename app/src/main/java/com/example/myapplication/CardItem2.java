@@ -7,11 +7,11 @@ public class CardItem2 {
     private String contentRange;    // 适用范围
     private String contentExample;  // 例子
     private String parentTitle;     // 父标题
-    private int id;                 // 卡片ID
+    private int id,level;                 // 卡片ID
 
     // 构造方法：包含所有字段
     public CardItem2(String content, String contentDefine, String contentMeaning,
-                     String contentRange, String contentExample, String parentTitle, int id) {
+                     String contentRange, String contentExample, String parentTitle, int id,int level) {
         this.content = content;
         this.contentDefine = contentDefine;
         this.contentMeaning = contentMeaning;
@@ -19,6 +19,7 @@ public class CardItem2 {
         this.contentExample = contentExample;
         this.parentTitle = parentTitle;
         this.id = id;
+        this.level=level;
     }
 
     // 默认构造方法
@@ -83,6 +84,15 @@ public class CardItem2 {
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
 
 
 }

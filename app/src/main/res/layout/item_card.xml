@@ -38,12 +38,19 @@
                 android:clickable="true"
                 />
 
-
-
-
         <!-- 卡片内容 -->
         <TextView
             android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="卡片内容"
+            android:textSize="14sp" />
+
+        <!-- 卡片内容 -->
+        <TextView
+            android:id="@+id/level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"

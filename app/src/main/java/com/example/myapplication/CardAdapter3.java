@@ -13,12 +13,14 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.CardItem2;
 import com.example.myapplication.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -64,9 +68,10 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
     public void onBindViewHolder(@NonNull CardViewHolder3 holder, int position) {
         CardItem3 card = cardList.get(position);
         holder.content.setText(card.getContent());
+        holder.level.setText("等级"+String.valueOf(card.getLevel()));
         holder.content.setOnClickListener(v->{
             CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
-            showEditContentDialog(context,card.getid(),card.getContent(),dbHelper,position);
+            showEditContentDialog(context,card.getid(),card.getContent(),String.valueOf(card.getLevel()),card,dbHelper,position);
         });
         holder.content.setOnLongClickListener(v->{
             removeCard(position);
@@ -93,10 +98,12 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
 
     // ViewHolder类,每个控件在item中的具体位置
     static class CardViewHolder3 extends RecyclerView.ViewHolder {
-        TextView content;
+        TextView content,level;
         public CardViewHolder3(@NonNull View itemView) {
             super(itemView);
             content = itemView.findViewById(R.id.cardContent2);
+            level = itemView.findViewById(R.id.cardContent3);
+
 
         }
     }
@@ -124,33 +131,59 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
         return this.cardList;
     }
 
-    public void showEditContentDialog(final Context context, final int cardId, String currentContent, final CardDatabaseHelper3 dbHelper, final int position) {
+    public void showEditContentDialog(final Context context, final int cardId, String currentContent,String currentLevel,CardItem3 card, final CardDatabaseHelper3 dbHelper, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("编辑内容");
 
-        // 设置输入框
-        final EditText input = new EditText(context);
-        input.setText(currentContent);
-        input.setSelection(currentContent.length()); // 将光标移动到文本末尾
-        builder.setView(input);
+        // 使用自定义布局
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_content2, null);
+
+        // 获取输入框引用
+        final TextInputEditText editTextContent = view.findViewById(R.id.editTextContent);
+        final TextInputEditText editTextLevel = view.findViewById(R.id.editTextLevel);
+
+        // 设置当前内容
+        editTextContent.setText(currentContent);
+        editTextContent.setSelection(currentContent.length()); // 将光标移动到文本末尾
+
+        // 获取当前等级并设置到输入框
+        // 假设您有一个方法可以获取当前卡片的等级
+        // 例如：int currentLevel = dbHelper.getCardLevelById(cardId);
+        // 这里为了示例，假设当前等级为1
+        editTextLevel.setText(String.valueOf(currentLevel));
+        editTextLevel.setSelection(currentLevel.length());
+        builder.setView(view);
 
         // 设置确定按钮
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newContent = input.getText().toString().trim();
+                String newContent = editTextContent.getText().toString().trim();
+                String newLevelStr = editTextLevel.getText().toString().trim();
+
                 if (!newContent.isEmpty()) {
-                    boolean isUpdated = dbHelper.updateCardContent(cardId, newContent);
-                    if (isUpdated) {
-                        // 更新数据源
-                        cardList.get(position).setContent(newContent);
-                        // 通知适配器数据已更改
+                    int newLevel;
+                    try {
+                        newLevel = Integer.parseInt(newLevelStr);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(context, "请输入有效的等级", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // 更新卡片内容
+                    boolean isContentUpdated = dbHelper.updateCardContent(cardId, newContent);
+                    // 更新卡片等级
+                    boolean isLevelUpdated = dbHelper.updateCardLevel(cardId, newLevel);
+                    if (isContentUpdated||isLevelUpdated) {
                         notifyItemChanged(position);
                     } else {
                         // 处理更新失败的情况
+                        Toast.makeText(context, "更新失败", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    // 处理输入为空的情况
+                    // 显示错误提示
+                    TextInputLayout textInputLayoutContent = view.findViewById(R.id.textInputLayoutContent);
+                    textInputLayoutContent.setError("内容不能为空");
                 }
             }
         });
@@ -160,6 +193,16 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        // 监听对话框显示事件，设置焦点和软键盘
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                editTextContent.requestFocus();
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editTextContent, InputMethodManager.SHOW_IMPLICIT);
             }
         });
 

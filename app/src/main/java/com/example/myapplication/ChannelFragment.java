@@ -72,7 +72,7 @@ public class ChannelFragment extends Fragment {
 
         // 加载微信阅读的网页 URL
         //String wechatReadingUrl = "https://weread.qq.com/"; // 请根据实际情况替换为微信阅读的 URL
-        webView.loadUrl("https://weread.qq.com/");
+        webView.loadUrl("https://ai-bot.cn/");
 
         return view;
     }

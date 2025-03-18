@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +46,7 @@ public class Cards_Activity2 extends AppCompatActivity {
 
 
         Button button =findViewById(R.id.add_btn2);
-        int parentid = getIntent().getIntExtra("parentid",0);
-
+        String parentid = getIntent().getStringExtra("parentid");
         RecyclerView recyclerView = findViewById(R.id.recyclerView3);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CardAdapter3(this, new ArrayList<>());
@@ -64,29 +68,42 @@ public class Cards_Activity2 extends AppCompatActivity {
 
     public void showEditContentDialog(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("编辑内容");
+        builder.setTitle("添加新卡片");
 
-        // 设置输入框
-        final EditText input = new EditText(context);
-        input.setText("");
-        builder.setView(input);
+        // 使用自定义布局
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_content2, null);
 
+        // 获取输入框引用
+        final TextInputEditText editTextContent = view.findViewById(R.id.editTextContent);
+        final TextInputEditText editTextLevel = view.findViewById(R.id.editTextLevel);
+
+        builder.setView(view);
 
         // 设置确定按钮
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newContent = input.getText().toString().trim();
-
+                String newContent = editTextContent.getText().toString().trim();
+                String newLevelStr = editTextLevel.getText().toString().trim();
 
                 if (!newContent.isEmpty()) {
-                    int parentid = getIntent().getIntExtra("parentid",0);
-                    id=id+1;
-                    CardItem3 newCard = new CardItem3(newContent,parentid,id);
-                    dbHelper = new CardDatabaseHelper3(context);
+                    int level;
+                    try {
+                        level = Integer.parseInt(newLevelStr);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(context, "请输入有效的等级", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String parentId = getIntent().getStringExtra("parentid");
+                    String parenttile=getIntent().getStringExtra("parenttile2");
+                    int newId = getNextId(); // 实现获取下一个 ID 的方法
+                    CardItem3 newCard = new CardItem3(newContent, parentId, newId, level,parenttile);
+                    CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
                     dbHelper.insertCard(newCard);
                     adapter.addCard(newCard);
-
+                } else {
+                    Toast.makeText(context, "内容不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -100,5 +117,13 @@ public class Cards_Activity2 extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    // 示例方法：获取下一个 ID
+    private int getNextId() {
+        // 这里可以使用数据库查询获取当前最大 ID，然后加1
+        // 或者使用其他逻辑生成唯一 ID
+        // 这里只是一个示例，假设 ID 从1开始递增
+        return adapter.getItemCount() + 1;
     }
 }

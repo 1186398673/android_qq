@@ -72,8 +72,10 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
             return  true;
         });
         holder.content.setOnClickListener(v->{
+
             Intent intent = new Intent(context, Cards_Activity2.class);
-            intent.putExtra("parentid", card.getid());
+            intent.putExtra("parentid", card.getContent());
+            intent.putExtra("parenttile2", card.getParentTitle());
             //Log.i("parentTitle",card.getTitle());
             context.startActivity(intent);
         });
@@ -83,7 +85,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
             CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
             dbHelper.deleteCardById(card.getid());
             CardDatabaseHelper3 dbHelper3 = new CardDatabaseHelper3(context);
-            dbHelper3.deleteCardsByParentId(card.getid());
+            dbHelper3.deleteCardsByParentId(card.getContent());
 
             return  true;
         });
@@ -91,6 +93,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         holder.meaningTextView.setText(card.getContentMeaning());
         holder.rangeTextView.setText(card.getContentRange());
         holder.exampleTextView.setText(card.getContentExample());
+        holder.levelTextView.setText("等级"+card.getLevel());
         holder.rangeTextView.setOnClickListener(v->{
             CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
             showEditContentDialog(context,card,dbHelper,position);
@@ -130,7 +133,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         TextView defineTextView;
         TextView meaningTextView;
         TextView rangeTextView;
-        TextView exampleTextView;
+        TextView exampleTextView,levelTextView;
         public CardViewHolder2(@NonNull View itemView) {
             super(itemView);
             content = itemView.findViewById(R.id.cardContent);
@@ -138,6 +141,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
             meaningTextView = itemView.findViewById(R.id.cardContent_2);
             rangeTextView = itemView.findViewById(R.id.cardContent_3);
             exampleTextView = itemView.findViewById(R.id.cardContent_4);
+            levelTextView = itemView.findViewById(R.id.cardContent_5);
 
         }
     }
@@ -219,6 +223,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         final TextInputEditText editTextMeaning = view.findViewById(R.id.editTextMeaning);
         final TextInputEditText editTextRange = view.findViewById(R.id.editTextRange);
         final TextInputEditText editTextExample = view.findViewById(R.id.editTextExample);
+        final TextInputEditText editTextLevel = view.findViewById(R.id.editTextLevel);
 
         // 设置输入框的文本
         editTextContent.setText(card.getContent());
@@ -226,6 +231,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         editTextMeaning.setText(card.getContentMeaning());
         editTextRange.setText(card.getContentRange());
         editTextExample.setText(card.getContentExample());
+        editTextLevel.setText(String.valueOf(card.getLevel()));
 
         // 设置输入框的提示文本（可选）
         editTextContent.setHint("请输入标题");
@@ -233,7 +239,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         editTextMeaning.setHint("请输入意义");
         editTextRange.setHint("请输入适用范围");
         editTextExample.setHint("请输入例子");
-
+        editTextLevel.setHint("请输入等级");
         builder.setView(view);
 
         // 设置确定按钮
@@ -245,7 +251,8 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
                 String newMeaning = editTextMeaning.getText().toString().trim();
                 String newRange = editTextRange.getText().toString().trim();
                 String newExample = editTextExample.getText().toString().trim();
-
+                String newlevel = editTextLevel.getText().toString().trim();
+                int level=Integer.parseInt(newlevel);
                 if (!newContent.isEmpty()) {
                     // 更新卡片内容
                     card.setContent(newContent);
@@ -253,6 +260,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
                     card.setContentMeaning(newMeaning);
                     card.setContentRange(newRange);
                     card.setContentExample(newExample);
+                    card.setLevel(level);
 
                     boolean isUpdated = dbHelper.updateCard(card);
                     if (isUpdated) {
