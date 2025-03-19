@@ -10,8 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.OpenableColumns;
+import android.se.omapi.Session;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,15 +38,28 @@ import com.example.myapplication.NewCardActivity;
 import com.example.myapplication.R;
 
 import java.io.File;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.sql.DataSource;
 
 public class MessageFragment extends Fragment {
 
 
-
     private static final int PICK_CSV_FILE = 1;
-    private int id =1;
+    private int id = 1;
     private CardAdapter adapter;
     private CardViewModel viewModel;
 
@@ -55,7 +71,7 @@ public class MessageFragment extends Fragment {
         // 初始化 RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CardAdapter(getContext(),new ArrayList<>());
+        adapter = new CardAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
         // 将 ViewModel 的作用域设置为 Activity，这样在同一个 Activity 内的所有 Fragment 都可以共享同一个 ViewModel，从而保持数据的持久性。
@@ -75,19 +91,19 @@ public class MessageFragment extends Fragment {
         Button buttonAddCard2 = view.findViewById(R.id.buttonAddCard2);
         Button buttonAddCard3 = view.findViewById(R.id.buttonAddCard3);
         buttonAddCard.setOnClickListener(v -> {
-            showNewCardDialog();
+            //showNewCardDialog();
+            new EmailSender().execute();
         });
-        buttonAddCard2.setOnClickListener(v->{
+        buttonAddCard2.setOnClickListener(v -> {
             dbHelper.CardItem_exportToCSV(getContext());
             CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(getContext());
             dbHelper2.CardItem2_exportToCSV(getContext());
             CardDatabaseHelper3 dbHelper3 = new CardDatabaseHelper3(getContext());
             dbHelper3.CardItem3_exportToCSV(getContext());
         });
-        buttonAddCard3.setOnClickListener(v->{
+        buttonAddCard3.setOnClickListener(v -> {
             openFilePicker();
         });
-
 
 
         return view;
@@ -97,29 +113,27 @@ public class MessageFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-         if (requestCode == PICK_CSV_FILE && resultCode == RESULT_OK) {
+        if (requestCode == PICK_CSV_FILE && resultCode == RESULT_OK) {
             Uri uri = null;
             if (data != null) {
                 uri = data.getData();
                 Log.i("MesseageFragment", "选中的文件 URI: " + uri.toString());
                 // 处理导入的文件
-                String filename=getFileName(getContext(),uri);
+                String filename = getFileName(getContext(), uri);
                 String prefix = filename.substring(0, "CardDatabase1".length());
                 Log.i("MesseageFragment", "选中的名字: " + prefix);
                 Log.i("MesseageFragment", "选中的文件: " + filename);
-                if(prefix.equals("CardDatabase1")){
-                CardDatabaseHelper dbHelper = new CardDatabaseHelper(getContext());
-                dbHelper.importFromCSV(uri,getContext());}
-                else if(prefix.equals("CardDatabase2")){
+                if (prefix.equals("CardDatabase1")) {
+                    CardDatabaseHelper dbHelper = new CardDatabaseHelper(getContext());
+                    dbHelper.importFromCSV(uri, getContext());
+                } else if (prefix.equals("CardDatabase2")) {
                     CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(getContext());
-                    dbHelper2.importFromCSV(uri,getContext());
-                }
-                else if(prefix.equals("CardDatabase3")){
+                    dbHelper2.importFromCSV(uri, getContext());
+                } else if (prefix.equals("CardDatabase3")) {
                     CardDatabaseHelper3 dbHelper3 = new CardDatabaseHelper3(getContext());
-                    dbHelper3.importFromCSV(uri,getContext());
+                    dbHelper3.importFromCSV(uri, getContext());
                 }
                 adapter.notifyDataSetChanged();
-
 
 
             }
@@ -145,9 +159,6 @@ public class MessageFragment extends Fragment {
 
 
                 if (!newContent.isEmpty()) {
-
-
-
 
 
                 }
@@ -180,6 +191,7 @@ public class MessageFragment extends Fragment {
         // 启动选择器
         startActivityForResult(intent, PICK_CSV_FILE);
     }
+
     @SuppressLint("Range")
     private String getFileName(Context context, Uri uri) {
         String result = null;
@@ -198,6 +210,7 @@ public class MessageFragment extends Fragment {
         }
         return result;
     }
+
     private void showNewCardDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("新建卡片");
@@ -276,7 +289,7 @@ public class MessageFragment extends Fragment {
                 // 创建新的卡片
 
 
-                id=id+1;
+                id = id + 1;
                 CardItem newCard = new CardItem(id, title, "卡片数", selectedIconId, level);
 
                 // 保存到数据库
@@ -300,12 +313,14 @@ public class MessageFragment extends Fragment {
     }
 
 
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+

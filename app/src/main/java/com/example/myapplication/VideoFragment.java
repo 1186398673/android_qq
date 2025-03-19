@@ -97,7 +97,7 @@ public class VideoFragment extends Fragment implements BookAdapter.OnItemClickLi
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         // 指定 MIME 类型为常见的电子书格式，您可以根据需要调整
         intent.setType("*/*");
-        String[] mimeTypes = {"application/epub+zip", "application/pdf", "application/x-mobipocket-ebook"};
+        String[] mimeTypes = {"application/epub", "application/pdf", "application/x-mobipocket-ebook"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // 可选：限制选择单个文件
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
