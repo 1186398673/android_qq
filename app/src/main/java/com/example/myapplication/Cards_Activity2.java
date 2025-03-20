@@ -85,16 +85,15 @@ public class Cards_Activity2 extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String newContent = editTextContent.getText().toString().trim();
                 String newLevelStr = editTextLevel.getText().toString().trim();
-
+                int level ;
                 if (!newContent.isEmpty()) {
-                    int level;
-                    try {
-                        level = Integer.parseInt(newLevelStr);
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(context, "请输入有效的等级", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
 
+                    if(newLevelStr.isEmpty()){
+                        level=1;
+                    }
+                    else{
+                        level = Integer.parseInt(newLevelStr);
+                    }
                     String parentId = getIntent().getStringExtra("parentid");
                     String parenttile=getIntent().getStringExtra("parenttile2");
                     int newId = getNextId(); // 实现获取下一个 ID 的方法
@@ -121,9 +120,7 @@ public class Cards_Activity2 extends AppCompatActivity {
 
     // 示例方法：获取下一个 ID
     private int getNextId() {
-        // 这里可以使用数据库查询获取当前最大 ID，然后加1
-        // 或者使用其他逻辑生成唯一 ID
-        // 这里只是一个示例，假设 ID 从1开始递增
-        return adapter.getItemCount() + 1;
+
+        return dbHelper.getMaxId();
     }
 }

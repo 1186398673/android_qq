@@ -22,7 +22,8 @@
             android:id="@+id/buttonAddCard2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:text="导出csv"
             android:textSize="10dp"
             />
@@ -31,7 +32,7 @@
             android:id="@+id/buttonAddCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:text="+"
             android:textSize="20dp"
             />
@@ -40,8 +41,17 @@
             android:id="@+id/buttonAddCard3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:text="导入csv"
+            android:textSize="10dp"
+            />
+
+        <Button
+            android:id="@+id/buttonAddCard4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="上传"
             android:textSize="10dp"
             />
 

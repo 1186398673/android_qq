@@ -114,11 +114,17 @@ public class Cards_Activity extends AppCompatActivity {
                 String newRange = editTextRange.getText().toString().trim();
                 String newExample = editTextExample.getText().toString().trim();
                 String newLevel = editTextLevel.getText().toString().trim();
-                int level = Integer.parseInt(newLevel);
+                int level ;
 
                 if (!newContent.isEmpty()) {
+                    if(newLevel.isEmpty()){
+                        level=1;
+                    }
+                    else{
+                      level = Integer.parseInt(newLevel);
+                    }
                     String parentTitle = getIntent().getStringExtra("parentTitle");
-                    id = cardList.size() + 1;
+                    id = getNextId();
                     CardItem2 newCard = new CardItem2(newContent, newDefine, newMeaning, newRange, newExample, parentTitle, id,level);
                     dbHelper.insertCard(newCard);
                     adapter.addCard(newCard);
@@ -151,5 +157,10 @@ public class Cards_Activity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+    private int getNextId() {
+        // 这里可以使用数据库查询获取当前最大 ID，然后加1
+        // 或者使用其他逻辑生成唯一 ID
+        return dbHelper.getMaxId();
     }
 }

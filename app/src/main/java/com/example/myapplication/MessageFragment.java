@@ -90,9 +90,10 @@ public class MessageFragment extends Fragment {
         Button buttonAddCard = view.findViewById(R.id.buttonAddCard);
         Button buttonAddCard2 = view.findViewById(R.id.buttonAddCard2);
         Button buttonAddCard3 = view.findViewById(R.id.buttonAddCard3);
+        Button buttonAddCard4 = view.findViewById(R.id.buttonAddCard4);
         buttonAddCard.setOnClickListener(v -> {
-            //showNewCardDialog();
-            new EmailSender().execute();
+            showNewCardDialog();
+
         });
         buttonAddCard2.setOnClickListener(v -> {
             dbHelper.CardItem_exportToCSV(getContext());
@@ -100,9 +101,13 @@ public class MessageFragment extends Fragment {
             dbHelper2.CardItem2_exportToCSV(getContext());
             CardDatabaseHelper3 dbHelper3 = new CardDatabaseHelper3(getContext());
             dbHelper3.CardItem3_exportToCSV(getContext());
+
         });
         buttonAddCard3.setOnClickListener(v -> {
             openFilePicker();
+        });
+        buttonAddCard4.setOnClickListener(v->{
+            new EmailSender().execute();
         });
 
 
@@ -289,7 +294,7 @@ public class MessageFragment extends Fragment {
                 // 创建新的卡片
 
 
-                id = id + 1;
+                id = getNextId();
                 CardItem newCard = new CardItem(id, title, "卡片数", selectedIconId, level);
 
                 // 保存到数据库
@@ -310,6 +315,13 @@ public class MessageFragment extends Fragment {
         });
 
         builder.show();
+    }
+    private int getNextId() {
+        // 这里可以使用数据库查询获取当前最大 ID，然后加1
+        // 或者使用其他逻辑生成唯一 ID
+        // 这里只是一个示例，假设 ID 从1开始递增
+        CardDatabaseHelper dbHelper = new CardDatabaseHelper(getContext());
+        return dbHelper.getMaxId();
     }
 
 

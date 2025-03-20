@@ -344,4 +344,25 @@ public class CardDatabaseHelper extends SQLiteOpenHelper {
         values.add(sb.toString());
         return values.toArray(new String[0]);
     }
+    // 获取当前数据库中最大的 ID
+    public int getMaxId() {
+        int maxId = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            String query = "SELECT MAX(" + COLUMN_ID + ") AS max_id FROM " + TABLE_CARDS;
+            cursor = db.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                maxId = cursor.getInt(cursor.getColumnIndexOrThrow("max_id"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return maxId+1;
+    }
 }
