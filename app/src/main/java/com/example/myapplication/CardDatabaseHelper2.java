@@ -17,6 +17,9 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -258,11 +261,10 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
     }
 
     // 从 CSV 文件导入数据
-    public void importFromCSV( Uri uri,final Context context) {
-        // 检查权限
+    public void importFromCSV(Uri uri, final Context context) {
         final AtomicBoolean success = new AtomicBoolean(true);
 
-        // 使用 AsyncTask 或其他异步方式处理导入操作，避免阻塞主线程
+        // 使用AsyncTask或其他异步方式处理导入操作，避免阻塞主线程
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -272,43 +274,53 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
                     ContentResolver contentResolver = context.getContentResolver();
                     InputStream inputStream = contentResolver.openInputStream(uri);
                     if (inputStream == null) {
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(context, "无法打开文件", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        new Handler(Looper.getMainLooper()).post(() ->
+                                Toast.makeText(context, "无法打开文件", Toast.LENGTH_SHORT).show()
+                        );
                         success.set(false);
                         return;
                     }
 
                     br = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
+                    CSVReader reader = new CSVReader(br);
+                    String[] values;
                     boolean isFirstLine = true;
                     db = getWritableDatabase();
                     db.beginTransaction();
-                    while ((line = br.readLine()) != null) {
+                    while ((values = reader.readNext()) != null) {
                         if (isFirstLine) {
                             // 跳过标题行
                             isFirstLine = false;
                             continue;
                         }
 
-                        // 解析每一行
-                        String[] values = parseCsvLine(line);
+                        // 检查字段数量
                         if (values.length != 8) {
                             // 跳过格式不正确的行
                             continue;
                         }
 
-                        int id = Integer.parseInt(values[0]);
+                        // 解析每一行
+                        int id;
+                        try {
+                            id = Integer.parseInt(values[0]);
+                        } catch (NumberFormatException e) {
+                            // 跳过ID格式不正确的行
+                            continue;
+                        }
                         String content = values[1];
                         String contentDefine = values[2];
                         String contentMeaning = values[3];
                         String contentRange = values[4];
                         String contentExample = values[5];
                         String parentTitle = values[6];
-                        int level = Integer.parseInt(values[7]);
+                        int level;
+                        try {
+                            level = Integer.parseInt(values[7]);
+                        } catch (NumberFormatException e) {
+                            // 跳过level格式不正确的行
+                            continue;
+                        }
 
                         // 插入到数据库
                         ContentValues cv = new ContentValues();
@@ -324,7 +336,7 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
                     }
                     db.setTransactionSuccessful();
                     db.endTransaction();
-                } catch (IOException | NumberFormatException e) {
+                } catch (IOException | CsvValidationException e) {
                     e.printStackTrace();
                     success.set(false);
                 } finally {
@@ -341,14 +353,11 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
                 }
 
                 // 在主线程中显示结果
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if ( success.get()) {
-                            Toast.makeText(context, "数据已成功导入", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "导入失败", Toast.LENGTH_SHORT).show();
-                        }
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (success.get()) {
+                        Toast.makeText(context, "数据已成功导入", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "导入失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
