@@ -132,6 +132,17 @@ public class CardDatabaseHelper2 extends SQLiteOpenHelper {
         return rowsAffected;
     }
 
+    public boolean updateParentTitleById(int cardId, String newParentTitle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PARENT_TITLE, newParentTitle);
+
+        // 使用ID作为条件更新
+        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(cardId)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
     public boolean updateCardContent(int id, String newContent) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

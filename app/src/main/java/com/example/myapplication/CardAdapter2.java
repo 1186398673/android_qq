@@ -107,8 +107,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
             showEditContentDialog(context,card,dbHelper,position);
         });
         holder.exampleTextView.setOnClickListener(v->{
-            CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
-            showEditContentDialog(context,card,dbHelper,position);
+            showRenameDialog(context,card.getid(),position);
         });
 
 
@@ -301,6 +300,45 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         });
 
         dialog.show();
+    }
+    public void showRenameDialog(final Context context,final int id ,final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("重明名父标题");
+
+        // 设置输入框
+        final EditText input = new EditText(context);
+        input.setHint("请输入新的卡片父标题");
+        builder.setView(input);
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newTitle = input.getText().toString().trim();
+                if (!newTitle.isEmpty()) {
+
+                    CardDatabaseHelper2 dbHelper2 = new CardDatabaseHelper2(context);
+                    dbHelper2.updateParentTitleById(id,newTitle);
+
+                    notifyItemChanged(position);
+
+
+
+                } else {
+                    // 处理输入为空的情况
+                }
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 
