@@ -1,28 +1,27 @@
 package com.example.myapplication;
 
-
-
 public class CardItem3 {
     private String content;
-    private String Parentid;
-
-    private String Parenttile;
-
-    private int id,level;
+    private String parentId;
+    private String parentTitle;
+    private int id;
+    private int level;
+    private String imageUrl; // 新增的图片URL
 
     public CardItem3() {
         // 默认构造方法
     }
 
-    public CardItem3(String content,String Parentid,int id,int level,String Parenttile) {
+    public CardItem3(String content, String parentId, int id, int level, String parentTitle, String imageUrl) {
         this.content = content;
-        this.Parentid=Parentid;
-        this.id=id;
-        this.level=level;
-        this.Parenttile=Parenttile;
-
+        this.parentId = parentId;
+        this.id = id;
+        this.level = level;
+        this.parentTitle = parentTitle;
+        this.imageUrl = imageUrl;
     }
 
+    // Getter 和 Setter 方法
     public String getContent() {
         return content;
     }
@@ -32,23 +31,22 @@ public class CardItem3 {
     }
 
     public String getParentid() {
-        return Parentid;
+        return parentId;
     }
 
-    public void setParentid(String Parentid) {
-        this.Parentid = Parentid;
+    public void setParentid(String parentId) {
+        this.parentId = parentId;
     }
-
 
     public String getParenttile() {
-        return Parenttile;
+        return parentTitle;
     }
 
-    public void setParenttile(String Parenttile) {
-        this.Parenttile = Parenttile;
+    public void setParenttile(String parentTitle) {
+        this.parentTitle = parentTitle;
     }
 
-    public int getid(){
+    public int getid() {
         return id;
     }
 
@@ -64,7 +62,11 @@ public class CardItem3 {
         this.level = level;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-
-
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

@@ -1,13 +1,19 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +29,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+
 public class Cards_Activity2 extends AppCompatActivity {
 
     private CardAdapter3 adapter;
@@ -31,6 +41,19 @@ public class Cards_Activity2 extends AppCompatActivity {
 
 
     private List<CardItem3> cardList;
+
+    private static final int REQUEST_CODE_SELECT_IMAGE=3;
+
+    private String selectImage;
+
+    private Uri selectImageuri;
+
+    public static final String DEFAULT_IMAGE_URL = "";
+
+
+
+
+
 
     private  int id=1;
 
@@ -77,6 +100,23 @@ public class Cards_Activity2 extends AppCompatActivity {
         final TextInputEditText editTextContent = view.findViewById(R.id.editTextContent);
         final TextInputEditText editTextLevel = view.findViewById(R.id.editTextLevel);
 
+        // 获取图片视图和按钮引用
+
+        Button buttonSelectImage = view.findViewById(R.id.buttonSelectImage);
+
+
+        selectImage="";
+        // 设置选择图片按钮的点击事件
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 创建Intent来选择图片
+                openFilePicker();
+                // 启动选择图片的活动，并等待结果
+
+            }
+        });
+
         builder.setView(view);
 
         // 设置确定按钮
@@ -85,22 +125,39 @@ public class Cards_Activity2 extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String newContent = editTextContent.getText().toString().trim();
                 String newLevelStr = editTextLevel.getText().toString().trim();
-                int level ;
+                int level;
                 if (!newContent.isEmpty()) {
 
                     if(newLevelStr.isEmpty()){
-                        level=1;
+                        level = 1;
                     }
                     else{
                         level = Integer.parseInt(newLevelStr);
                     }
                     String parentId = getIntent().getStringExtra("parentid");
-                    String parenttile=getIntent().getStringExtra("parenttile2");
+                    String parentTile = getIntent().getStringExtra("parenttile2");
                     int newId = getNextId(); // 实现获取下一个 ID 的方法
-                    CardItem3 newCard = new CardItem3(newContent, parentId, newId, level,parenttile);
-                    CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
-                    dbHelper.insertCard(newCard);
-                    adapter.addCard(newCard);
+
+                    if(selectImage.isEmpty())
+                    {
+                        CardItem3 newCard = new CardItem3(newContent, parentId, newId, level, parentTile,DEFAULT_IMAGE_URL);
+                        CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
+                        dbHelper.insertCard(newCard);
+                        adapter.addCard(newCard);
+                    }
+                    else {
+
+                        Log.i("VideoFragment2", "选中的文件 URI: " + selectImageuri.toString());
+                        String SelectImageuri=selectImageuri.toString();
+                        CardItem3 newCard = new CardItem3(newContent, parentId, newId, level, parentTile,SelectImageuri);
+                        CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
+                        dbHelper.insertCard(newCard);
+                        adapter.addCard(newCard);
+                        selectImageuri=null;
+                    }
+
+
+
                 } else {
                     Toast.makeText(context, "内容不能为空", Toast.LENGTH_SHORT).show();
                 }
@@ -122,5 +179,36 @@ public class Cards_Activity2 extends AppCompatActivity {
     private int getNextId() {
 
         return dbHelper.getMaxId();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                Log.i("VideoFragment", "选中的文件 URI: " + uri.toString());
+                // 处理导入的文件
+                selectImageuri=dbHelper.saveImageToExternalStorage(uri,this);
+                selectImage=  uri.toString();
+
+            }
+        }
+    }
+
+    private void openFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); // 使用 ACTION_OPEN_DOCUMENT 更加通用
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*"); // 设置为所有图片类型
+
+        // 可选：指定多个 MIME 类型
+        String[] mimeTypes = {"image/png", "image/jpeg", "image/gif", "image/bmp", "image/webp"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
+        // 可选：限制选择单个文件
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+
+        // 启动选择器，并等待结果
+        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
     }
 }

@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.example.myapplication.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.time.Instant;
 import java.util.List;
 
 public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHolder3> {
@@ -67,6 +69,15 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder3 holder, int position) {
         CardItem3 card = cardList.get(position);
+
+        if(card.getImageUrl().equals(""))
+        {
+            holder.imageView.setImageResource(R.mipmap.emj10);
+        }
+        else {
+            Uri imageUri = Uri.parse(card.getImageUrl());
+            holder.imageView.setImageURI(imageUri);
+        }
         holder.content.setText(card.getContent());
         holder.level.setText("等级"+String.valueOf(card.getLevel()));
         holder.content.setOnClickListener(v->{
@@ -99,10 +110,14 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
     // ViewHolder类,每个控件在item中的具体位置
     static class CardViewHolder3 extends RecyclerView.ViewHolder {
         TextView content,level;
+
+        ImageView imageView;
         public CardViewHolder3(@NonNull View itemView) {
             super(itemView);
+
             content = itemView.findViewById(R.id.cardContent2);
             level = itemView.findViewById(R.id.cardContent3);
+            imageView=itemView.findViewById(R.id.imageView_pic);
 
 
         }

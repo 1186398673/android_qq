@@ -3,24 +3,25 @@ package com.example.myapplication;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
+import androidx.annotation.Nullable;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,25 +34,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CardDatabaseHelper3 extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "cards2.db";
-    private static final int DATABASE_VERSION = 3; // 更新版本号以触发 onUpgrade
+    private static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_CARDS = "cards";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_PARENT_ID = "parentId";
-    public static final String COLUMN_PARENT_TILE = "parentTile"; // 新增的 parentTile 列
-    public static final String COLUMN_LEVEL = "level"; // 新增的等级列
+    public static final String COLUMN_PARENT_TILE = "parentTile";
+    public static final String COLUMN_LEVEL = "level";
+    public static final String COLUMN_IMAGE_URL = "imageUrl";
 
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_CARDS + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_CONTENT + " TEXT, " +
                     COLUMN_PARENT_ID + " INTEGER, " +
-                    COLUMN_PARENT_TILE + " TEXT, " + // 新增的 parentTile 列
-                    COLUMN_LEVEL + " INTEGER DEFAULT 1" + // 默认等级为1
+                    COLUMN_PARENT_TILE + " TEXT, " +
+                    COLUMN_LEVEL + " INTEGER DEFAULT 1, " +
+                    COLUMN_IMAGE_URL + " TEXT" +
                     ");";
 
-    public CardDatabaseHelper3(Context context) {
+    public CardDatabaseHelper3(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -62,15 +65,7 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2) {
-            // 升级到版本2：添加新的 level 列，默认为1
-            db.execSQL("ALTER TABLE " + TABLE_CARDS + " ADD COLUMN " + COLUMN_LEVEL + " INTEGER DEFAULT 1");
-        }
-        if (oldVersion < 3) {
-            // 升级到版本3：添加新的 parentTile 列，允许为空
-            db.execSQL("ALTER TABLE " + TABLE_CARDS + " ADD COLUMN " + COLUMN_PARENT_TILE + " TEXT");
-        }
-        // 如果将来有更多版本升级，可以在这里添加更多逻辑
+
     }
 
     // 插入卡片数据
@@ -79,8 +74,9 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CONTENT, card.getContent());
         values.put(COLUMN_PARENT_ID, card.getParentid());
-        values.put(COLUMN_PARENT_TILE, card.getParenttile()); // 添加 parentTile
+        values.put(COLUMN_PARENT_TILE, card.getParenttile());
         values.put(COLUMN_LEVEL, card.getLevel());
+        values.put(COLUMN_IMAGE_URL, card.getImageUrl());
         db.insert(TABLE_CARDS, null, values);
         db.close();
     }
@@ -89,34 +85,25 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
     public List<CardItem3> getCardsByParentId(String parentId) {
         List<CardItem3> cardList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CARDS, new String[]{COLUMN_ID, COLUMN_CONTENT, COLUMN_PARENT_ID, COLUMN_PARENT_TILE, COLUMN_LEVEL},
-                COLUMN_PARENT_ID + "=?", new String[]{parentId}, null, null, COLUMN_LEVEL + " DESC"); // 按等级升序排序
+        String selection = COLUMN_PARENT_ID + " = ?";
+        String[] selectionArgs = { parentId };
+        Cursor cursor = db.query(TABLE_CARDS, null, selection, selectionArgs, null, null, COLUMN_LEVEL + " DESC");
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 CardItem3 card = new CardItem3();
                 card.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
                 card.setContent(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTENT)));
                 card.setParentid(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARENT_ID)));
-                card.setParenttile(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARENT_TILE))); // 设置 parentTile
+                card.setParenttile(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARENT_TILE)));
                 card.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_LEVEL)));
+                card.setImageUrl(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)));
                 cardList.add(card);
             } while (cursor.moveToNext());
+            cursor.close();
         }
-
-        cursor.close();
         db.close();
         return cardList;
-    }
-
-    // 批量更新 parentId
-    public int updateParentId(String oldParentId, String newParentId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_PARENT_ID, newParentId);
-        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_PARENT_ID + "=?", new String[]{String.valueOf(oldParentId)});
-        db.close();
-        return rowsAffected;
     }
 
     // 更新卡片内容
@@ -169,8 +156,9 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CONTENT, card.getContent());
         values.put(COLUMN_PARENT_ID, card.getParentid());
-        values.put(COLUMN_PARENT_TILE, card.getParenttile()); // 添加 parentTile
+        values.put(COLUMN_PARENT_TILE, card.getParenttile());
         values.put(COLUMN_LEVEL, card.getLevel());
+        values.put(COLUMN_IMAGE_URL, card.getImageUrl());
         int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(card.getid())});
         db.close();
         return rowsAffected > 0;
@@ -178,30 +166,21 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
 
     // 导出数据为 CSV 文件
     public void CardItem3_exportToCSV(Context context) {
-
-
-        // 获取卡片列表
         List<CardItem3> cardList = getAllCards();
+        String[] headers = {"ID", "Content", "Parent ID", "Parent Tile", "Level", "Image URL"};
 
-        // 定义 CSV 文件的标题
-        String[] headers = {"ID", "Content", "Parent ID", "Parent Tile", "Level"};
-
-        // 获取外部存储的公共下载目录
         File exportDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "CardData3");
         if (!exportDir.exists()) {
             exportDir.mkdirs();
         }
 
-        // 定义 CSV 文件名
         File file = new File(exportDir, "CardDatabase3" + System.currentTimeMillis() + ".csv");
 
         try {
             FileWriter writer = new FileWriter(file);
-            // 写入标题
             writer.append(String.join(",", headers));
             writer.append("\n");
 
-            // 写入数据
             for (CardItem3 card : cardList) {
                 writer.append(String.valueOf(card.getid()));
                 writer.append(",");
@@ -212,16 +191,17 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
                 writer.append("\"" + escapeSpecialCharacters(card.getParenttile()) + "\"");
                 writer.append(",");
                 writer.append(String.valueOf(card.getLevel()));
+                writer.append(",");
+                writer.append("\"" + escapeSpecialCharacters(card.getImageUrl()) + "\"");
                 writer.append("\n");
             }
 
             writer.flush();
             writer.close();
-
             Toast.makeText(context, "数据已成功导出到 " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "导出失败: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "导出失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -236,8 +216,9 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
                 card.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
                 card.setContent(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTENT)));
                 card.setParentid(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARENT_ID)));
-                card.setParenttile(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARENT_TILE))); // 设置 parentTile
+                card.setParenttile(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARENT_TILE)));
                 card.setLevel(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_LEVEL)));
+                card.setImageUrl(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)));
                 cardList.add(card);
             }
             cursor.close();
@@ -259,7 +240,6 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
     public void importFromCSV(Uri uri, final Context context) {
         final AtomicBoolean success = new AtomicBoolean(true);
 
-        // 使用 AsyncTask 或其他异步方式处理导入操作，避免阻塞主线程
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -277,7 +257,6 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
                         return;
                     }
 
-                    // 使用 OpenCSV 的 CSVReader 读取输入流
                     csvReader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                     String[] values;
                     boolean isFirstLine = true;
@@ -285,51 +264,38 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
                     db.beginTransaction();
                     while ((values = csvReader.readNext()) != null) {
                         if (isFirstLine) {
-                            // 跳过标题行
                             isFirstLine = false;
                             continue;
                         }
 
-                        // 检查字段数量
-                        if (values.length != 5) {
-                            // 跳过格式不正确的行
+                        if (values.length != 6) {
                             continue;
                         }
 
-                        // 解析每一行
-                        String content;
-                        try {
-                            content = values[1];
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            // 如果某个字段缺失，跳过该行
-                            continue;
-                        }
                         int id;
                         try {
                             id = Integer.parseInt(values[0]);
                         } catch (NumberFormatException e) {
-                            // 如果ID格式不正确，跳过该行
                             continue;
                         }
+                        String content = values[1];
                         String parentId = values[2];
                         String parentTile = values[3];
                         int level;
                         try {
                             level = Integer.parseInt(values[4]);
                         } catch (NumberFormatException e) {
-                            // 如果level格式不正确，跳过该行
                             continue;
                         }
+                        String imageUrl = values[5];
 
-                        // 创建新的 CardItem3 对象
-                        CardItem3 card = new CardItem3(content, parentId, id, level, parentTile);
-
-                        // 插入到数据库
+                        CardItem3 card = new CardItem3(content, parentId, id, level, parentTile,imageUrl);
                         ContentValues cv = new ContentValues();
                         cv.put(COLUMN_CONTENT, card.getContent());
                         cv.put(COLUMN_PARENT_ID, card.getParentid());
                         cv.put(COLUMN_PARENT_TILE, card.getParenttile());
                         cv.put(COLUMN_LEVEL, card.getLevel());
+                        cv.put(COLUMN_IMAGE_URL, card.getImageUrl());
                         db.insert(TABLE_CARDS, null, cv);
                     }
                     db.setTransactionSuccessful();
@@ -357,7 +323,6 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
                     }
                 }
 
-                // 在主线程中显示结果
                 new Handler(Looper.getMainLooper()).post(() -> {
                     if (success.get()) {
                         Toast.makeText(context, "数据已成功导入", Toast.LENGTH_SHORT).show();
@@ -368,23 +333,42 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
             }
         }).start();
     }
-    private String[] parseCsvLine(String line) {
-        List<String> values = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        boolean inQuotes = false;
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (c == '"') {
-                inQuotes = !inQuotes;
-            } else if (c == ',' && !inQuotes) {
-                values.add(sb.toString());
-                sb.setLength(0);
-            } else {
-                sb.append(c);
+
+    // 保存图片到外部存储
+    public Uri saveImageToExternalStorage(Uri imageUri, Context context) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(context, "外部存储不可用", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        File exportDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "CardData3_pic");
+        if (!exportDir.exists()) {
+            boolean wasCreated = exportDir.mkdirs();
+            if (!wasCreated) {
+                Toast.makeText(context, "无法创建目录", Toast.LENGTH_SHORT).show();
+                return null;
             }
         }
-        values.add(sb.toString());
-        return values.toArray(new String[0]);
+
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+
+            String fileName = "image_" + System.currentTimeMillis() + ".png";
+            File file = new File(exportDir, fileName);
+
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+
+            Uri fileUri = Uri.fromFile(file);
+            return fileUri;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "保存图片失败", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
     public int getMaxId() {
         int maxId = 0;
@@ -404,6 +388,6 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
             }
             db.close();
         }
-        return maxId+1;
+        return maxId + 1;
     }
 }

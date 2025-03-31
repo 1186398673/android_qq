@@ -22,6 +22,14 @@
         <activity
             android:name=".Cards_Activity2"
             android:exported="true" />
+           <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+            </provider>
         <activity
             android:name=".ReadActivity"
             android:exported="true" />
@@ -56,6 +64,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
     </application>
 
 </manifest>
