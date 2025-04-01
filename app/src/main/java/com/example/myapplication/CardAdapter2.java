@@ -100,7 +100,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
         });
         holder.defineTextView.setOnClickListener(v->{
             CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
-            showEditContentDialog(context,card,dbHelper,position);
+            showEditContentDialog(context,card.getid(),card.getContent(),dbHelper,position);
         });
         holder.meaningTextView.setOnClickListener(v->{
             CardDatabaseHelper2 dbHelper = new CardDatabaseHelper2(context);
@@ -170,7 +170,7 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
 
     public void showEditContentDialog(final Context context, final int cardId, String currentContent, final CardDatabaseHelper2 dbHelper, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("编辑内容");
+        builder.setTitle("编辑标题");
 
         // 设置输入框
         final EditText input = new EditText(context);
@@ -185,6 +185,8 @@ public class CardAdapter2 extends RecyclerView.Adapter<CardAdapter2.CardViewHold
                 String newContent = input.getText().toString().trim();
                 if (!newContent.isEmpty()) {
                     boolean isUpdated = dbHelper.updateCardContent(cardId, newContent);
+                    CardDatabaseHelper3 dbHelper3 = new CardDatabaseHelper3(context);
+                    dbHelper3.updateParentId(currentContent,newContent);
                     if (isUpdated) {
                         // 更新数据源
                         cardList.get(position).setContent(newContent);

@@ -33,7 +33,7 @@ import java.util.List;
 
 
 
-public class Cards_Activity2 extends AppCompatActivity {
+public class Cards_Activity2 extends AppCompatActivity implements CardAdapter3.OnItemClickListener {
 
     private CardAdapter3 adapter;
 
@@ -44,7 +44,11 @@ public class Cards_Activity2 extends AppCompatActivity {
 
     private static final int REQUEST_CODE_SELECT_IMAGE=3;
 
+    private static final int REQUEST_CODE_SELECT_IMAGE2=4;
+
     private String selectImage;
+
+
 
     private Uri selectImageuri;
 
@@ -72,7 +76,7 @@ public class Cards_Activity2 extends AppCompatActivity {
         String parentid = getIntent().getStringExtra("parentid");
         RecyclerView recyclerView = findViewById(R.id.recyclerView3);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CardAdapter3(this, new ArrayList<>());
+        adapter = new CardAdapter3(this, new ArrayList<>(),this);
         recyclerView.setAdapter(adapter);
         cardList=dbHelper.getCardsByParentId(parentid);
         adapter.setCards(cardList);
@@ -126,8 +130,6 @@ public class Cards_Activity2 extends AppCompatActivity {
                 String newContent = editTextContent.getText().toString().trim();
                 String newLevelStr = editTextLevel.getText().toString().trim();
                 int level;
-                if (!newContent.isEmpty()) {
-
                     if(newLevelStr.isEmpty()){
                         level = 1;
                     }
@@ -158,9 +160,6 @@ public class Cards_Activity2 extends AppCompatActivity {
 
 
 
-                } else {
-                    Toast.makeText(context, "内容不能为空", Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
@@ -194,6 +193,17 @@ public class Cards_Activity2 extends AppCompatActivity {
 
             }
         }
+        else {
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                Log.i("VideoFragment", "选中的文件 URI: " + uri.toString());
+                // 处理导入的文件
+                selectImageuri=dbHelper.saveImageToExternalStorage(uri,this);
+                selectImage=  uri.toString();
+
+            }
+        }
     }
 
     private void openFilePicker() {
@@ -210,5 +220,104 @@ public class Cards_Activity2 extends AppCompatActivity {
 
         // 启动选择器，并等待结果
         startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+
+    }
+    private void openFilePicker2() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); // 使用 ACTION_OPEN_DOCUMENT 更加通用
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*"); // 设置为所有图片类型
+
+        // 可选：指定多个 MIME 类型
+        String[] mimeTypes = {"image/png", "image/jpeg", "image/gif", "image/bmp", "image/webp"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
+        // 可选：限制选择单个文件
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+
+        // 启动选择器，并等待结果
+        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE2);
+
+    }
+
+    public void showEditContentDialog2(final Context context,final CardItem3 card) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("修改卡片");
+
+        // 使用自定义布局
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_content2, null);
+
+        // 获取输入框引用
+        final TextInputEditText editTextContent = view.findViewById(R.id.editTextContent);
+        final TextInputEditText editTextLevel = view.findViewById(R.id.editTextLevel);
+
+        // 获取图片视图和按钮引用
+
+        Button buttonSelectImage = view.findViewById(R.id.buttonSelectImage);
+
+
+        selectImage="";
+        // 设置选择图片按钮的点击事件
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 创建Intent来选择图片
+                openFilePicker2();
+                // 启动选择图片的活动，并等待结果
+
+            }
+        });
+
+        builder.setView(view);
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newContent = editTextContent.getText().toString().trim();
+                String newLevelStr = editTextLevel.getText().toString().trim();
+                int level;
+                if(newLevelStr.isEmpty()){
+                    level = 1;
+                }
+                else{
+                    level = Integer.parseInt(newLevelStr);
+                }
+
+                if(selectImage.isEmpty())
+                {
+                    card.setContent(newContent);
+                    card.setLevel(level);
+                    card.setImageUrl("");
+                    dbHelper.updateCard(card);
+                    adapter.notifyDataSetChanged();
+                }
+                else {
+                    card.setContent(newContent);
+                    card.setLevel(level);
+                    card.setImageUrl(selectImageuri.toString());
+                    dbHelper.updateCard(card);
+                    adapter.notifyDataSetChanged();
+                }
+
+
+
+
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    @Override
+    public void onItemClick(CardItem3 card) {
+        showEditContentDialog2(this,card);
     }
 }

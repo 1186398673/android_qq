@@ -31,6 +31,7 @@ import com.example.myapplication.CardItem2;
 import com.example.myapplication.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.squareup.picasso.Picasso;
 
 import java.time.Instant;
 import java.util.List;
@@ -40,16 +41,19 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
     private List<CardItem3> cardList;//用于存储要显示的卡片数据
     private Context context;
 
-
-
+    private CardAdapter3.OnItemClickListener listener;
+    public interface OnItemClickListener {
+        void onItemClick(CardItem3 card);
+    }
 
 
 
 
     // 另一种构造函数（如果需要）
-    public CardAdapter3(Context context, List<CardItem3> cardList) {
+    public CardAdapter3(Context context, List<CardItem3> cardList, CardAdapter3.OnItemClickListener listener) {
         this.cardList = cardList;
         this.context=context;
+        this.listener=listener;
 
 
 
@@ -69,27 +73,17 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder3 holder, int position) {
         CardItem3 card = cardList.get(position);
-
-        if(card.getImageUrl().equals(""))
-        {
+        if(card.getImageUrl().equals("")) {
             holder.imageView.setImageResource(R.mipmap.emj10);
-        }
-        else {
+        } else {
             Uri imageUri = Uri.parse(card.getImageUrl());
-            holder.imageView.setImageURI(imageUri);
+            Picasso.get()
+                    .load(imageUri)
+                    .into(holder.imageView);
         }
         holder.content.setText(card.getContent());
         holder.level.setText("等级"+String.valueOf(card.getLevel()));
-        holder.content.setOnClickListener(v->{
-            CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
-            showEditContentDialog(context,card.getid(),card.getContent(),String.valueOf(card.getLevel()),card,dbHelper,position);
-        });
-        holder.content.setOnLongClickListener(v->{
-            removeCard(position);
-            CardDatabaseHelper3 dbHelper = new CardDatabaseHelper3(context);
-            dbHelper.deleteCardById(card.getid());
-            return true;
-        });
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(card));
 
 
 
@@ -161,8 +155,6 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
         editTextContent.setText(currentContent);
         editTextContent.setSelection(currentContent.length()); // 将光标移动到文本末尾
 
-        // 获取当前等级并设置到输入框
-        // 假设您有一个方法可以获取当前卡片的等级
         // 例如：int currentLevel = dbHelper.getCardLevelById(cardId);
         // 这里为了示例，假设当前等级为1
         editTextLevel.setText(String.valueOf(currentLevel));
@@ -223,6 +215,7 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
 
         builder.show();
     }
+
 
 
 

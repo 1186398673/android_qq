@@ -106,6 +106,8 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
         return cardList;
     }
 
+
+
     // 更新卡片内容
     public boolean updateCardContent(int id, String newContent) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -148,6 +150,16 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
         int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
         return rowsAffected > 0;
+    }
+
+    // 更新 parentId
+    public int updateParentId(String oldParentId, String newParentId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PARENT_ID, newParentId);
+        int rowsAffected = db.update(TABLE_CARDS, values, COLUMN_PARENT_ID + " = ?", new String[]{oldParentId});
+        db.close();
+        return rowsAffected;
     }
 
     // 更新卡片的所有字段
