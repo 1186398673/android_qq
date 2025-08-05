@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:layout_height="match_parent"
     android:padding="16dp"
     android:elevation="4dp"
     android:layout_marginBottom="16dp"
@@ -13,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:orientation="vertical"
         >
 
@@ -24,6 +24,7 @@
             android:text="标题"
             android:textColor="@android:color/holo_red_dark"
             android:clickable="true"
+            android:layout_marginBottom="40dp"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:text="定义"
             android:clickable="true"
+            android:layout_marginBottom="10dp"
             />
 
         </LinearLayout>
@@ -65,6 +67,7 @@
             android:layout_height="wrap_content"
             android:text="意义"
             android:clickable="true"
+            android:layout_marginBottom="10dp"
             />
         </LinearLayout>
 
@@ -86,6 +89,7 @@
             android:layout_height="wrap_content"
             android:text="适用范围"
             android:clickable="true"
+            android:layout_marginBottom="10dp"
             />
 
         </LinearLayout>
@@ -109,6 +113,7 @@
             android:layout_height="wrap_content"
             android:text="例子"
             android:clickable="true"
+            android:layout_marginBottom="10dp"
             />
         </LinearLayout>
 
@@ -116,6 +121,7 @@
             android:id="@+id/cardContent_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:text="等级"
             android:gravity="center"
             android:clickable="true"
@@ -127,4 +133,4 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>

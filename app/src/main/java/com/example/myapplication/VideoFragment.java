@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.shockwave.pdfium.PdfDocument;
+import com.shockwave.pdfium.PdfiumCore;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -125,7 +129,7 @@ public class VideoFragment extends Fragment implements BookAdapter.OnItemClickLi
 
             Toast.makeText(getContext(), "电子书已导入", Toast.LENGTH_SHORT).show();
             // 更新书籍列表
-            Bitmap cover = PDFUtils.getPDFCover(getContext(), importedFile.getAbsolutePath());
+            Bitmap cover = getPDFCover(getContext(), importedFile.getAbsolutePath());
             Book newBook =new Book(j+1,fileName, importedFile.getAbsolutePath(),cover);
             bookList.add(newBook);
             adapter.notifyDataSetChanged();
@@ -173,6 +177,34 @@ public class VideoFragment extends Fragment implements BookAdapter.OnItemClickLi
             }
         }
     }
+
+    public static Bitmap getPDFCover(Context context, String filePath) {
+        PdfiumCore pdfiumCore = new PdfiumCore(context);
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()) {
+            Log.e("PDFUtils", "PDF 文件不存在或不是一个文件: " + filePath);
+            return null;
+        }
+
+        try {
+            ParcelFileDescriptor fd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+            PdfDocument pdfDocument = pdfiumCore.newDocument(fd);
+            pdfiumCore.openPage(pdfDocument, 0);
+            int width = pdfiumCore.getPageWidthPoint(pdfDocument, 0);
+            int height = pdfiumCore.getPageHeightPoint(pdfDocument, 0);
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            pdfiumCore.renderPageBitmap(pdfDocument, bitmap, 0, 0, 0, width, height);
+            pdfiumCore.closeDocument(pdfDocument);
+            fd.close();
+            return bitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("PDFUtils", "无法打开 PDF 文件: " + filePath, e);
+            return null;
+        }
+    }
+
+
 
 
 

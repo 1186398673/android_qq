@@ -60,6 +60,9 @@ dependencies {
     implementation files('libs/SparkChain.aar')
     implementation 'com.opencsv:opencsv:5.7.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "androidx.fragment:fragment-ktx:1.6.2"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
 
 
 

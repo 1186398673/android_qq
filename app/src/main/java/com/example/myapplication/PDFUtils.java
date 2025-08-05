@@ -208,31 +208,7 @@ public class PDFUtils {
      * @param filePath PDF 文件的路径
      * @return 封面 Bitmap，如果失败则返回 null
      */
-    public static Bitmap getPDFCover(Context context, String filePath) {
-        PdfiumCore pdfiumCore = new PdfiumCore(context);
-        File file = new File(filePath);
-        if (!file.exists() || !file.isFile()) {
-            Log.e("PDFUtils", "PDF 文件不存在或不是一个文件: " + filePath);
-            return null;
-        }
 
-        try {
-            ParcelFileDescriptor fd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-            PdfDocument pdfDocument = pdfiumCore.newDocument(fd);
-            pdfiumCore.openPage(pdfDocument, 0);
-            int width = pdfiumCore.getPageWidthPoint(pdfDocument, 0);
-            int height = pdfiumCore.getPageHeightPoint(pdfDocument, 0);
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            pdfiumCore.renderPageBitmap(pdfDocument, bitmap, 0, 0, 0, width, height);
-            pdfiumCore.closeDocument(pdfDocument);
-            fd.close();
-            return bitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("PDFUtils", "无法打开 PDF 文件: " + filePath, e);
-            return null;
-        }
-    }
 
 
 

@@ -80,6 +80,7 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
             Picasso.get()
                     .load(imageUri)
                     .into(holder.imageView);
+
         }
         holder.content.setText(card.getContent());
         holder.level.setText("等级"+String.valueOf(card.getLevel()));

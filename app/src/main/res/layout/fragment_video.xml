@@ -7,22 +7,23 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        >
+        android:layout_height="match_parent"
+        />
+
+
+
         <Button
             android:id="@+id/buttonaddbook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:text="+"
             android:textSize="20dp"
             />
 
-    </RelativeLayout>
+
+
 
 </RelativeLayout>

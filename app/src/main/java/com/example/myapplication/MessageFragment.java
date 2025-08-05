@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -70,6 +71,11 @@ public class MessageFragment extends Fragment {
 
         // 初始化 RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+//        recyclerView.setLayoutManager(gridLayoutManager);
+
+        // 可选：设置 SpanSizeLookup 以控制每个项的跨度
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CardAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);

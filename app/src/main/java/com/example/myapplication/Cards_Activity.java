@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +59,11 @@ public class Cards_Activity extends AppCompatActivity {
         Button button =findViewById(R.id.add_btn);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView2);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        //recyclerView.setLayoutManager(gridLayoutManager);
+        // 修改布局管理器初始化代码
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CardAdapter2(this, new ArrayList<>());
         recyclerView.setAdapter(adapter);
         cardList = dbHelper.getCardsByParentTitle(parentTitle);

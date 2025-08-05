@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +76,8 @@ public class Cards_Activity2 extends AppCompatActivity implements CardAdapter3.O
         Button button =findViewById(R.id.add_btn2);
         String parentid = getIntent().getStringExtra("parentid");
         RecyclerView recyclerView = findViewById(R.id.recyclerView3);
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        //recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CardAdapter3(this, new ArrayList<>(),this);
         recyclerView.setAdapter(adapter);
