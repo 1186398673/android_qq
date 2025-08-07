@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edict_text_bg"
         android:hint="请输入标题"
-        android:inputType="number"/>
+        android:inputType="text"/>
 
     <Button
         android:id="@+id/btn_query"
