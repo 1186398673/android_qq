@@ -7,23 +7,25 @@ public class TaskItem implements Serializable {
     private int id;
     private String title;
     private String content;
-
+    private boolean completed; 
     private Date date;
 
 
     // 默认构造方法（自动设置当前日期）
     public TaskItem(int id, String title, String content) {
-        this(id, title, content, new Date());
+        this(id, title, content, new Date(), false);
     }
 
 
-    // 完整构造方法
-    public TaskItem(int id, String title, String content, Date date) {
+    public TaskItem(int id, String title, String content, Date date, boolean completed) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.date = date;
+        this.completed = completed;
     }
+
+
 
     // Getters and setters
     public int getId() {
@@ -57,6 +59,14 @@ public class TaskItem implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
 }

@@ -1,14 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:layout_marginTop="10dp"
+    >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- 左侧时间选择区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="联系人页面"
-        android:textSize="40sp" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_start_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="开始时间"/>
+
+        <Button
+            android:id="@+id/btn_end_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:text="结束时间"/>
+
+
+    </LinearLayout>
+
+    <!-- 左侧时间选择区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_gravity="end"
+        android:text="保存"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="删除全部"
+        android:backgroundTint="#FF4444"
+        android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+
+
+    
+
+
+
+            
+            <!-- 修改为输入区域 -->
+            <EditText
+                android:id="@+id/et_user_input"
+                android:layout_width="match_parent"
+                android:background="@drawable/edict_text_bg"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:hint="请输入新内容..."
+                />
+                
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+        <!-- 新增历史记录展示 -->
+        <TextView
+            android:id="@+id/tv_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_background"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"/>
+    </ScrollView>
+
 
 </LinearLayout>

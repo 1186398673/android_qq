@@ -402,4 +402,33 @@ public class CardDatabaseHelper3 extends SQLiteOpenHelper {
         }
         return maxId + 1;
     }
+    
+
+
+
+public String getDailyContentByParentId(String parentId) {
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = null;
+    try {
+        String[] selectionArgs = { parentId };
+        cursor = db.query(TABLE_CARDS, 
+            new String[]{COLUMN_CONTENT},
+            COLUMN_PARENT_ID + " = ?",
+            selectionArgs,
+            null, 
+            null,
+            "RANDOM()",
+            "1");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(COLUMN_CONTENT);
+            if(columnIndex != -1) {
+                return cursor.getString(columnIndex);
+            }
+        }
+    } finally {
+        // 原有资源关闭逻辑
+    }
+    return "未找到对应内容";
+}
 }

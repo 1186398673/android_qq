@@ -2,12 +2,14 @@ package com.example.myapplication;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,7 +80,8 @@ public class ReadActivity extends AppCompatActivity implements OnPageChangeListe
     // 新增目录弹窗显示方法
     private void showTableOfContents(List<PdfDocument.Bookmark> bookmarks) {
         if (bookmarks == null || bookmarks.isEmpty()) {
-            Toast.makeText(this, "该文档没有目录", Toast.LENGTH_SHORT).show();
+            // 新增页码输入对话框
+            showPageInputDialog();
             return;
         }
     
@@ -112,6 +115,32 @@ public class ReadActivity extends AppCompatActivity implements OnPageChangeListe
         display.getMetrics(metrics);
         dialog.getWindow().setLayout(metrics.widthPixels * 2 / 3, metrics.heightPixels * 3 / 4);
         dialog.show();
+    }
+    
+    // 新增页码输入方法
+    private void showPageInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("输入页码跳转");
+        
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setHint("当前总页数: " + pdfView.getPageCount());
+        builder.setView(input);
+        
+        builder.setPositiveButton("跳转", (dialog, which) -> {
+            String pageStr = input.getText().toString();
+            if (!TextUtils.isEmpty(pageStr)) {
+                int targetPage = Integer.parseInt(pageStr) - 1; // 转换为0-based索引
+                if (targetPage >= 0 && targetPage < pdfView.getPageCount()) {
+                    jumpToPage(targetPage);
+                } else {
+                    Toast.makeText(this, "无效页码", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
     
     // 保持原有onPageChanged方法不变

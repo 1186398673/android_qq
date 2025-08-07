@@ -43,6 +43,8 @@
 
         <activity
             android:name=".ReadActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true" />
         <activity
             android:name=".Cards_Activity"

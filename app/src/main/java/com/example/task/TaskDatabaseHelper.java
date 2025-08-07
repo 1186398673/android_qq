@@ -1,22 +1,20 @@
 package com.example.task;
 
-
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TaskDatabaseHelper extends SQLiteOpenHelper {
     // 数据库名称和版本
     private static final String DATABASE_NAME = "task.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 1; // 更新版本号
 
     // 表名和列名
     public static final String TABLE_TASKS = "tasks";
@@ -24,16 +22,17 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_COMPLETED = "completed"; // 新增列
 
-    // 创建表SQL语句
+    // 创建表SQL语句（更新后的）
     private static final String CREATE_TABLE_TASKS =
             "CREATE TABLE " + TABLE_TASKS + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_TITLE + " TEXT NOT NULL, " +
                     COLUMN_CONTENT + " TEXT, " +
-                    COLUMN_DATE + " INTEGER)"; // 使用时间戳存储日期
+                    COLUMN_DATE + " INTEGER, " +
+                    COLUMN_COMPLETED + " INTEGER DEFAULT 0)"; // 默认值为0（未完成）
 
-    // 构造函数
     public TaskDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -46,9 +45,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // 升级数据库时执行
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
-        onCreate(db);
+
     }
 
     // 添加任务
@@ -58,7 +55,8 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, task.getTitle());
         values.put(COLUMN_CONTENT, task.getContent());
-        values.put(COLUMN_DATE, task.getDate().getTime()); // 存储时间戳
+        values.put(COLUMN_DATE, task.getDate().getTime());
+        values.put(COLUMN_COMPLETED, task.isCompleted() ? 1 : 0); // 存储布尔值为整数
 
         long id = db.insert(TABLE_TASKS, null, values);
         db.close();
@@ -84,6 +82,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TITLE, task.getTitle());
         values.put(COLUMN_CONTENT, task.getContent());
         values.put(COLUMN_DATE, task.getDate().getTime());
+        values.put(COLUMN_COMPLETED, task.isCompleted() ? 1 : 0);
 
         boolean result = db.update(TABLE_TASKS, values,
                 COLUMN_ID + " = ?",
@@ -98,7 +97,12 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_TASKS,
-                null, null, null, null, null, null);
+            null, 
+            null, 
+            null, 
+            null, 
+            null, 
+            COLUMN_COMPLETED + " ASC"); // 新增排序条件
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -106,7 +110,8 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
                         cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_CONTENT)),
-                        new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_DATE)))
+                        new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_DATE))),
+                        cursor.getInt(cursor.getColumnIndex(COLUMN_COMPLETED)) == 1 // 映射为布尔值
                 );
                 taskList.add(task);
             } while (cursor.moveToNext());
@@ -139,7 +144,9 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
                 null,
                 COLUMN_DATE + " >= ? AND " + COLUMN_DATE + " < ?",
                 new String[]{String.valueOf(startTime), String.valueOf(endTime)},
-                null, null, null);
+                null, 
+                null, 
+                COLUMN_COMPLETED + " ASC");  // 新增排序条件
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -147,7 +154,8 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
                         cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_CONTENT)),
-                        new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_DATE)))
+                        new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_DATE))),
+                        cursor.getInt(cursor.getColumnIndex(COLUMN_COMPLETED)) == 1 // 映射为布尔值
                 );
                 taskList.add(task);
             } while (cursor.moveToNext());
@@ -157,4 +165,6 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return taskList;
     }
+
+    
 }

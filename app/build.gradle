@@ -63,6 +63,9 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.6.2"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.github.QuadFlask:colorpicker:0.0.15' // 颜色选择器
+    implementation 'com.google.code.gson:gson:2.8.8' // JSON序列化
 
 
 

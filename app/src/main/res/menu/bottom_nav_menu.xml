@@ -4,29 +4,29 @@
     <item
         android:id="@+id/nav_message"
         android:icon="@mipmap/phone"
-        android:title="消息" />
+        android:title="模型" />
 
     <!-- 频道 -->
     <item
         android:id="@+id/nav_channel"
         android:icon="@mipmap/register"
-        android:title="频道" />
+        android:title="任务" />
 
     <!-- 短视频 -->
     <item
         android:id="@+id/nav_video"
         android:icon="@mipmap/more"
-        android:title="短视频" />
+        android:title="书籍" />
 
     <!-- 联系人 -->
     <item
         android:id="@+id/nav_contacts"
         android:icon="@mipmap/user"
-        android:title="联系人" />
+        android:title="思维" />
 
     <!-- 动态 -->
     <item
         android:id="@+id/nav_dynamic"
         android:icon="@mipmap/user"
-        android:title="动态" />
+        android:title="一句" />
 </menu>

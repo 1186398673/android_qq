@@ -40,7 +40,7 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
 
     private List<CardItem3> cardList;//用于存储要显示的卡片数据
     private Context context;
-
+    private CardDatabaseHelper3 dbHelper;
     private CardAdapter3.OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(CardItem3 card);
@@ -85,6 +85,14 @@ public class CardAdapter3 extends RecyclerView.Adapter<CardAdapter3.CardViewHold
         holder.content.setText(card.getContent());
         holder.level.setText("等级"+String.valueOf(card.getLevel()));
         holder.itemView.setOnClickListener(v -> listener.onItemClick(card));
+
+        holder.content.setOnLongClickListener(v->{
+            dbHelper = new CardDatabaseHelper3(context);
+            dbHelper.deleteCardById(card.getid());
+            removeCard(position);
+            return true;
+        });
+
 
 
 

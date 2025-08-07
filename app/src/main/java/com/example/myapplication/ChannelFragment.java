@@ -120,7 +120,7 @@ public class ChannelFragment extends Fragment implements TaskDetailFragment.OnTa
     private void loadTasks() {
         List<TaskItem> tasks = dbHelper.getTasksByDate(selectedDate);
         if (adapter == null) {
-            adapter = new TaskAdapter(tasks);
+            adapter = new TaskAdapter(tasks,dbHelper);
             recyclerView.setAdapter(adapter);
         } else {
             adapter.updateTasks(tasks);
@@ -205,7 +205,7 @@ public class ChannelFragment extends Fragment implements TaskDetailFragment.OnTa
                         allTasks.get(allTasks.size() - 1).getId() + 1 : 1;
 
                 // 创建带日期的新任务
-                TaskItem newTask = new TaskItem(newId, title, content, selectedTaskDate[0]);
+                TaskItem newTask = new TaskItem(newId, title, content, selectedTaskDate[0],false);
 
                 // 插入数据库
                 dbHelper.insertTask(newTask);
